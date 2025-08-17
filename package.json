@@ -1,0 +1,47 @@
+{
+  "name": "sakura-apprun-deploy",
+  "version": "v0.0.5",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ncc build src/index.ts -o dist && act workflow_dispatch -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:act-latest --secret-file .secrets",
+    "build": "ncc build src/index.ts -o dist",
+    "lint": "npx eslint",
+    "format": "npx prettier tests/* src/* mocks/* --write",
+    "test": "node --no-warnings --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sundaypeople/sakura-apprun-deploy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sundaypeople/sakura-apprun-deploy/issues"
+  },
+  "homepage": "https://github.com/sundaypeople/sakura-apprun-deploy#readme",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.1",
+    "buffer": "^6.0.3",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.1",
+    "@babel/preset-typescript": "^7.27.1",
+    "@eslint/js": "^9.33.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^24.3.0",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.3.0",
+    "jest": "^30.0.5",
+    "prettier": "^3.6.2",
+    "ts-jest": "^29.4.1",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.1"
+  }
+}

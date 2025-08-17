@@ -1,0 +1,63 @@
+import { Buffer } from 'node:buffer';
+import * as model from './model';
+
+export class ApprunClient implements model.IApprunClient {
+  private readonly authHeader: string;
+  URL = 'https://secure.sakura.ad.jp/cloud/api/apprun/1.0/apprun/api/';
+
+  constructor(accessToken: string, accessSecret: string) {
+    this.authHeader = 'Basic ' + Buffer.from(`${accessToken}:${accessSecret}`).toString('base64');
+  }
+
+  async createApplication(application: model.CreateApplicationRequest): Promise<model.CreateApplicationResponse> {
+    const request = new Request(`${this.URL}applications`, {
+      method: 'POST',
+      headers: {
+        Authorization: this.authHeader,
+      },
+      body: JSON.stringify(application),
+    });
+    const response = await fetch(request);
+    if (response.status >= 400) {
+      const errText = await response.text();
+      throw new Error(`Failed to create application  — ` + `status ${response.status} ${response.statusText} — ` + `URL: ${this.URL}applications — ` + `Response: ${errText}`);
+    }
+    const data: model.CreateApplicationResponse = await response.json();
+    return data;
+  }
+
+  async getAllApplication(): Promise<model.GetAllApplicationResponse> {
+    const request = new Request(`${this.URL}applications`, {
+      method: 'GET',
+      headers: {
+        Authorization: this.authHeader,
+      },
+    });
+    const response = await fetch(request);
+    if (response.status >= 400) {
+      throw new Error(`Failed to get all application — ` + `status ${response.status} ${response.statusText} — ` + `URL: ${this.URL}applications — ` + `Response: ${response.text()}`);
+    }
+    const body: model.GetAllApplicationResponse = await response.json();
+    return body;
+  }
+
+  async patchApplication(application: model.PatchApplicationRequest): Promise<model.PatchApplicationResponse> {
+    const id = application.id;
+    application.id = undefined;
+
+    const request = new Request(`${this.URL}applications/${id}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: this.authHeader,
+      },
+      body: JSON.stringify(application),
+    });
+    const response = await fetch(request);
+    if (response.status >= 400) {
+      const errorText = await response.text();
+      throw new Error(`Failed to patch application (id: ${id}) — ` + `status ${response.status} ${response.statusText} — ` + `URL: ${this.URL}applications/${id} — ` + `Response: ${errorText}`);
+    }
+    const data: model.PatchApplicationResponse = await response.json();
+    return data;
+  }
+}

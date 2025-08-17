@@ -1,0 +1,35 @@
+# .github/workflows/local-test.yml
+name: local-test
+on: { workflow_dispatch: {} }
+
+jobs:
+  run-custom-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run my custom action
+        uses: ./
+        with:
+          access_token: ${{ secrets.ACCESS_TOKEN }}
+          access_secret: ${{ secrets.ACCESS_SECRET }}
+          application_name: example
+          port: "80"
+          image: testinginx.sakuracr.jp/testnginx:v0.0.1
+          container_registry_username: ${{ secrets.REGISTRY_USER }}
+          container_registry_password: ${{ secrets.REGISTRY_PASS }}
+          min_scale: "0"
+          max_scale: "2"
+          components_name: example
+          server: testinginx.sakuracr.jp
+          max_cpu: "0.5"
+          max_memory: "512Mi"
+          timeout_seconds: 60
+          probe_path: /
+          probe_port: "80"
+          probe_headers: |
+            X-Env: "dev"
+            X-Token: "secret"
+          env: |
+            NODE_ENV: "production"
+            LOG_LEVEL: "info"
