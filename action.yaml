@@ -1,0 +1,67 @@
+name: Apprun of sacloud "Deploy application" Action
+description: Registers and deploys the application to Apprun
+
+inputs:
+  access_token:
+    description: 'API access token'
+    required: true
+  access_secret:
+    description: 'API access secret'
+    required: true
+  application_name:
+    description: 'The name of Apprun application'
+    required: true
+  port:
+    description: 'Port number to expose the application'
+    required: false
+  image:
+    description: 'Container image to deploy'
+    required: true
+  container_registry_username:
+    description: 'Container registry username'
+    required: false
+  container_registry_password:
+    description: 'Container registry password'
+    required: false
+  min_scale:
+    description: 'Minimum scale for the application'
+    required: false
+  max_scale:
+    description: 'Maximum scale for the application'
+    required: false
+  components_name:
+    description: 'Components name for the application'
+    required: false
+  server:
+    description: 'Server for the container registry'
+    required: false
+  max_cpu:
+    description: 'Maximum CPU for the application'
+    required: false
+  max_memory:
+    description: 'Maximum memory for the application'
+    required: false
+  timeout_seconds:
+    description: 'Timeout in seconds for the application'
+    required: false
+  probe_path:
+    description: 'probe check path to http server'
+    required: false
+  probe_port:
+    description: 'probe check port to http server'
+    required: false
+  probe_headers:
+    description: 'probe check headers to http server'
+    required: false
+  env:
+    description: 'App Run service environment'
+    required: false
+
+
+outputs:
+  public_url:
+    description: 'The public URL of the deployed app'
+
+runs:
+  using: node20
+  main: dist/index.js
