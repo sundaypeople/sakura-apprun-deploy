@@ -29,7 +29,7 @@ jobs:
           application_name: my-app
           image: registry.example.com/namespace/my-app:latest
           port: 8080
-          min_scale: 1
+          min_scale: 0
           max_scale: 2
 
       - name: Show URL
@@ -61,7 +61,7 @@ jobs:
 
           # ポート / スケール
           port: 8080
-          min_scale: 1
+          min_scale: 0
           max_scale: 2
 
           # コンポーネント名（省略時は application_name）
