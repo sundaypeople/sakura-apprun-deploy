@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.0.4](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.3...v0.0.4) - 2025-12-17
+- fix input packet filter by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/26
+
 ## [v0.0.3](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.2...v0.0.3) - 2025-12-17
 - add packet filter by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/23
 - change readme by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/25
