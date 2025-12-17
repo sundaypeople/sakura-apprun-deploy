@@ -57,7 +57,8 @@ jobs:
 
           # アプリ識別
           application_name: example
-          image: testnginx.sakuracr.jp/busy_server:v0.0.2
+          image: testnginx.sakuracr.jp/busy_server:v0.0.2 // デプロイするコンテナイメージ
+          server: testnginx.sakuracr.jp
 
           # ポート / スケール
           port: 8080
@@ -73,8 +74,8 @@ jobs:
           server: testnginx.sakuracr.jp
 
           # リソース上限
-          max_cpu: "0.5"      # 文字列: "0.1"〜"1"
-          max_memory: "512Mi" # 256Mi / 512Mi / 1Gi / 2Gi
+          max_cpu: "0.5"     
+          max_memory: "512Mi" 
 
           # タイムアウト（秒）
           timeout_seconds: 60
