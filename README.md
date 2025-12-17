@@ -113,8 +113,8 @@ jobs:
 | `max_scale`                   |     | 最大インスタンス数                                            |
 | `components_name`             |     | コンポーネント名（省略時 `application_name`）                     |
 | `server`                      |     | レジストリのサーバー名（省略時は `image` から自動抽出）                     |
-| `max_cpu`                     |     | 最大 CPU（文字列。例: `"0.1"`〜`"1"`）                         |
-| `max_memory`                  |     | 最大メモリ（`"256Mi"`, `"512Mi"`, `"1Gi"`, `"2Gi"`）        |
+| `max_cpu`                     |     | 最大 CPU（使用できるMemoryとの組み合わせ`"0.5-1Gi"`, `"1-1Gi"`, `"1-2Gi"`, `"2-2Gi"`,`"2-4Gi"`)                         |
+| `max_memory`                  |     | 最大Memory（使用できるCPUとの組み合わせ`"0.5-1Gi"`, `"1-1Gi"`, `"1-2Gi"`, `"2-2Gi"`,`"2-4Gi"`)        |
 | `timeout_seconds`             |     | アプリのタイムアウト（秒）                                        |
 | `probe_path`                  |     | ヘルスチェックの HTTP パス                                     |
 | `probe_port`                  |     | ヘルスチェックのポート番号                                        |

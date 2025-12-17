@@ -23,7 +23,7 @@ jobs:
           components_name: example
           server: testinginx.sakuracr.jp
           max_cpu: "0.5"
-          max_memory: "512Mi"
+          max_memory: "1Gi"
           timeout_seconds: 60
           probe_path: /
           probe_port: "80"
