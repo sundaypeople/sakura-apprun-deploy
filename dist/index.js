@@ -31625,7 +31625,7 @@ function getCreateConfig(applicationName) {
         settings: [],
     };
     const packetFilterInput = getStringInputUndefined('packet_filter_allowlist', true);
-    if (!packetFilterInput) {
+    if (packetFilterInput) {
         const packetFilterArray = packetFilterInput?.split('\n');
         if (typeof packetFilterArray !== 'undefined') {
             packetFilterArray.forEach((packetFilterArray) => {
@@ -31636,6 +31636,7 @@ function getCreateConfig(applicationName) {
             });
         }
     }
+    console.log(packetFilter);
     const components = [
         {
             name: componentsName,
