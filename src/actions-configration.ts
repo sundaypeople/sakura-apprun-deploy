@@ -167,8 +167,6 @@ export function getUpdateConfig(applicationName: string, applicationID: string):
   if (!['0.5-1Gi', '1-1Gi', '1-2Gi', '2-2Gi', '2-4Gi'].includes(plan)) {
     throw new Error(`Invalid maxCPU and maxMemory value`);
   }
-
-
   const envInput = getStringInputUndefined('env', false);
   const env: Array<model.Env> = [];
   if (typeof envInput !== 'undefined') {
