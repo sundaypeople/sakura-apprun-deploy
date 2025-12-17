@@ -60,4 +60,25 @@ export class ApprunClient implements model.IApprunClient {
     const data: model.PatchApplicationResponse = await response.json();
     return data;
   }
+  async patchPacketFilter(applicationID: string, packetFilter: model.PatchPacketFilterRequest): Promise<model.PatchPacketFilterResponse> {
+    const request = new Request(`${this.URL}applications/${applicationID}/packet_filter`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: this.authHeader,
+      },
+      body: JSON.stringify(packetFilter),
+    });
+    const response = await fetch(request);
+    if (response.status >= 400) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to patch packet filter (id: ${applicationID}) — ` +
+          `status ${response.status} ${response.statusText} — ` +
+          `URL: ${this.URL}applications/${applicationID} — ` +
+          `Response: ${errorText}`,
+      );
+    }
+    const data: model.PatchPacketFilterResponse = await response.json();
+    return data;
+  }
 }

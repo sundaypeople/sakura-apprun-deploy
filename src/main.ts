@@ -13,15 +13,19 @@ export async function run(): Promise<void> {
     for (const data of applications.data) {
       nameToIdMap.set(data.name, data.id);
     }
-    const application = getConfig(nameToIdMap);
+    const [application, packetFilter] = getConfig(nameToIdMap);
     let publicURL = '';
     if (!('id' in application)) {
       const result = await client.createApplication(application as model.CreateApplicationRequest);
       console.log('create application:\n', JSON.stringify(result, null, 2));
+      const resultPacketfilter = await client.patchPacketFilter(result.id, packetFilter);
+      console.log('patch packet filter:\n', JSON.stringify(resultPacketfilter, null, 2));
       publicURL = result.public_url;
     } else {
       const result = await client.patchApplication(application);
       console.log('update application:\n', JSON.stringify(result, null, 2));
+      const resultPacketfilter = await client.patchPacketFilter(result.id, packetFilter);
+      console.log('patch packet filter:\n', JSON.stringify(resultPacketfilter, null, 2));
       publicURL = result.public_url;
     }
     setOutput('public_url', publicURL);

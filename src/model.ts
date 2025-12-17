@@ -114,6 +114,22 @@ export interface GetAllApplicationResponse {
   }>;
 }
 
+export interface PatchPacketFilterRequest {
+  is_enabled: boolean;
+  settings: Array<{
+    from_ip: string;
+    from_ip_prefix_length: number;
+  }>;
+}
+
+export interface PatchPacketFilterResponse {
+  is_enabled: boolean;
+  settings: Array<{
+    from_ip: string;
+    from_ip_prefix_length: number;
+  }>;
+}
+
 export interface IApprunClient {
   createApplication(application: CreateApplicationRequest): Promise<CreateApplicationResponse>;
   getAllApplication(): Promise<GetAllApplicationResponse>;
