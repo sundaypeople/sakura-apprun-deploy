@@ -68,7 +68,7 @@ describe('Behavior with mocked ApprunClient', () => {
     await run();
 
     expect(mockCore.setFailed).not.toHaveBeenCalled();
-    expect(mockPatchApplication).toHaveBeenCalledTimes(2);
+    expect(mockPatchApplication).toHaveBeenCalledTimes(1);
     expect(mockCreateApplication).not.toHaveBeenCalled();
 
     const patchArg = mockPatchApplication.mock.calls[0][0] as model.PatchApplicationRequest;
