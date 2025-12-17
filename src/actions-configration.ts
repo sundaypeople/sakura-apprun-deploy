@@ -127,7 +127,7 @@ export function getCreateConfig(applicationName: string): [model.CreateApplicati
     trimWhitespace: false,
   });
   if (!packetFilterEnabledInput) {
-    packetFilterEnabledInput = true;
+    packetFilterEnabledInput = false;
   }
 
   const packetFilter: model.PatchPacketFilterRequest = {
