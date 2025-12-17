@@ -31618,7 +31618,7 @@ function getCreateConfig(applicationName) {
         trimWhitespace: false,
     });
     if (!packetFilterEnabledInput) {
-        packetFilterEnabledInput = true;
+        packetFilterEnabledInput = false;
     }
     const packetFilter = {
         is_enabled: packetFilterEnabledInput,
