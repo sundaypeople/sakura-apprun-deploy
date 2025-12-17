@@ -50,10 +50,19 @@ export const mockPatchApplication = jest.fn((application: model.PatchApplication
   return Promise.resolve(mockData);
 });
 
+export const mockPacketFilter = jest.fn((packetFilterRequest: model.PatchPacketFilterRequest): Promise<model.PatchPacketFilterResponse> => {
+  const mockData: model.PatchPacketFilterResponse = {
+    is_enabled: packetFilterRequest.is_enabled,
+    settings: [],
+  };
+  return Promise.resolve(mockData);
+});
+
 export const MockApprunClient = jest.fn().mockImplementation(() => {
   return {
     getAllApplication: mockGetAllApplication,
     createApplication: mockCreateApplication,
     patchApplication: mockPatchApplication,
+    patchPacketFilter: mockPacketFilter,
   };
 });
