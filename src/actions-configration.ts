@@ -82,8 +82,8 @@ export function getCreateConfig(applicationName: string): model.CreateApplicatio
   const username = getStringInputUndefined('container_registry_username', true);
   const password = getStringInputUndefined('container_registry_password', true);
   const componentsName = getStringInput('components_name', applicationName, false, true);
-  const maxCpu = getStringInput('max_cpu', '0.1', false, true);
-  const maxMemory = getStringInput('max_memory', '256Mi', false, true);
+  const maxCpu = getStringInput('max_cpu', '0.5', false, true);
+  const maxMemory = getStringInput('max_memory', '1Gi', false, true);
   const plan = `${maxCpu}-${maxMemory}`;
   console.log(plan);
   if (!['0.5-1Gi', '1-1Gi', '1-2Gi', '2-2Gi', '2-4Gi'].includes(plan)) {
