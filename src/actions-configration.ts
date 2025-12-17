@@ -1,8 +1,8 @@
-import { getInput } from '@actions/core';
+import { getBooleanInput, getInput } from '@actions/core';
 import * as model from './model';
 import * as yaml from 'js-yaml';
 
-export function getConfig(nameToIdMap: Map<string, string>): model.CreateApplicationRequest | model.PatchApplicationRequest {
+export function getConfig(nameToIdMap: Map<string, string>): [model.CreateApplicationRequest, model.PatchPacketFilterRequest] | [model.PatchApplicationRequest, model.PatchPacketFilterRequest] {
   const applicationName = getInput('application_name', {
     trimWhitespace: true,
   });
@@ -72,7 +72,7 @@ export function getAPIKey(): model.Access {
   return { token: accessToken, secret: accessSecret };
 }
 
-export function getCreateConfig(applicationName: string): model.CreateApplicationRequest {
+export function getCreateConfig(applicationName: string): [model.CreateApplicationRequest, model.PatchPacketFilterRequest] {
   const timeoutSeconds = getNumberInput('time_seconds', 30, false);
   const port = getNumberInput('port', 80, false);
   const minScale = getNumberInput('min_scale', 0, false);
@@ -122,6 +122,32 @@ export function getCreateConfig(applicationName: string): model.CreateApplicatio
     };
   }
 
+  let packetFilterEnabledInput = getBooleanInput('packet_filter_enabled', {
+    required: false,
+    trimWhitespace: false,
+  });
+  if (!packetFilterEnabledInput) {
+    packetFilterEnabledInput = true;
+  }
+
+  const packetFilter: model.PatchPacketFilterRequest = {
+    is_enabled: packetFilterEnabledInput,
+    settings: [],
+  };
+  const packetFilterInput = getStringInputUndefined('packet_filter_allowlist', true);
+  if (packetFilterInput) {
+    const packetFilterArray = packetFilterInput?.split('\n');
+    if (typeof packetFilterArray !== 'undefined') {
+      packetFilterArray.forEach((packetFilterArray) => {
+        packetFilter.settings.push({
+          from_ip: packetFilterArray.split('/')[0],
+          from_ip_prefix_length: parseInt(packetFilterArray.split('/')[1]),
+        });
+      });
+    }
+  }
+  console.log(packetFilter);
+
   const components: model.ComponentSpec[] = [
     {
       name: componentsName,
@@ -148,10 +174,10 @@ export function getCreateConfig(applicationName: string): model.CreateApplicatio
     max_scale: maxScale,
     components: components,
   };
-  return application;
+  return [application, packetFilter];
 }
 
-export function getUpdateConfig(applicationName: string, applicationID: string): model.PatchApplicationRequest {
+export function getUpdateConfig(applicationName: string, applicationID: string): [model.PatchApplicationRequest, model.PatchPacketFilterRequest] {
   const timeoutSeconds = getNumberInputUndefined('time_seconds');
   const port = getNumberInputUndefined('port');
   const minScale = getNumberInputUndefined('min_scale');
@@ -200,6 +226,32 @@ export function getUpdateConfig(applicationName: string, applicationID: string):
     };
   }
 
+  let packetFilterEnabledInput = getBooleanInput('packet_filter_enabled', {
+    required: false,
+    trimWhitespace: false,
+  });
+  if (!packetFilterEnabledInput) {
+    packetFilterEnabledInput = false;
+  }
+
+  const packetFilter: model.PatchPacketFilterRequest = {
+    is_enabled: packetFilterEnabledInput,
+    settings: [],
+  };
+  const packetFilterInput = getStringInputUndefined('packet_filter_allowlist', true);
+  if (packetFilterInput) {
+    const packetFilterArray = packetFilterInput?.split('\n');
+    if (typeof packetFilterArray !== 'undefined') {
+      packetFilterArray.forEach((packetFilterArray) => {
+        packetFilter.settings.push({
+          from_ip: packetFilterArray.split('/')[0],
+          from_ip_prefix_length: parseInt(packetFilterArray.split('/')[1]),
+        });
+      });
+    }
+  }
+  console.log(JSON.stringify(packetFilter));
+
   const components: model.ComponentSpec[] = [
     {
       name: componentsName,
@@ -227,5 +279,5 @@ export function getUpdateConfig(applicationName: string, applicationID: string):
     max_scale: maxScale,
     components: components,
   };
-  return application;
+  return [application, packetFilter];
 }

@@ -93,6 +93,12 @@ jobs:
             NODE_ENV: "production"
             LOG_LEVEL: "info"
 
+          # packet filter
+          packet_filter_enabled: true
+          packet_filter_allowlist: |
+            0.0.0.0/0
+            1.1.1.1/32
+
       - name: Print URL
         run: echo "Public URL: ${{ steps.deploy.outputs.public_url }}"
 ```
@@ -101,26 +107,28 @@ jobs:
 
 ## Inputs（入力）
 
-| 名前                            |  必須 | 説明                                                   |
-| ----------------------------- | :-: | ---------------------------------------------------- |
-| `access_token`                |  ✔︎ | Apprun の API アクセストークン                                |
-| `access_secret`               |  ✔︎ | Apprun の API アクセスシークレット                              |
-| `application_name`            |  ✔︎ | アプリケーション名（作成/更新のキー）                                  |
-| `image`                       |  ✔︎ | デプロイするコンテナイメージ（例: `registry.example.com/ns/app:tag`） |
-| `port`                        |     | アプリがリッスンするポート番号                                      |
-| `container_registry_username` |     | コンテナレジストリのユーザー名                                      |
-| `container_registry_password` |     | コンテナレジストリのパスワード                                      |
-| `min_scale`                   |     | 最小インスタンス数                                            |
-| `max_scale`                   |     | 最大インスタンス数                                            |
-| `components_name`             |     | コンポーネント名（省略時 `application_name`）                     |
-| `server`                      |     | レジストリのサーバー名（省略時は `image` から自動抽出）                     |
-| `max_cpu`                     |     | 最大 CPU（使用できるMemoryとの組み合わせ`"0.5-1Gi"`, `"1-1Gi"`, `"1-2Gi"`, `"2-2Gi"`,`"2-4Gi"`)                         |
-| `max_memory`                  |     | 最大Memory（使用できるCPUとの組み合わせ`"0.5-1Gi"`, `"1-1Gi"`, `"1-2Gi"`, `"2-2Gi"`,`"2-4Gi"`)        |
-| `timeout_seconds`             |     | アプリのタイムアウト（秒）                                        |
-| `probe_path`                  |     | ヘルスチェックの HTTP パス                                     |
-| `probe_port`                  |     | ヘルスチェックのポート番号                                        |
-| `probe_headers`               |     | ヘルスチェックのヘッダ（YAML マップ: `Header-Name: "value"`）        |
-| `env`                         |     | サービス環境変数（YAML マップ: `KEY: "value"`）                   |
+| 名前                         | 必須 | 説明                                                                           |
+|----------------------------|:--:|------------------------------------------------------------------------------|
+| `access_token`             | ✔︎ | Apprun の API アクセストークン                                                        |
+| `access_secret`            | ✔︎ | Apprun の API アクセスシークレット                                                      |
+| `application_name`         | ✔︎ | アプリケーション名（作成/更新のキー）                                                          |
+| `image`                    | ✔︎ | デプロイするコンテナイメージ（例: `registry.example.com/ns/app:tag`）                         |
+| `port`                     |    | アプリがリッスンするポート番号                                                              |
+| `container_registry_username` |    | コンテナレジストリのユーザー名                                                              |
+| `container_registry_password` |    | コンテナレジストリのパスワード                                                              |
+| `min_scale`                |    | 最小インスタンス数                                                                    |
+| `max_scale`                |    | 最大インスタンス数                                                                    |
+| `components_name`          |    | コンポーネント名（省略時 `application_name`）                                             |
+| `server`                   |    | レジストリのサーバー名（省略時は `image` から自動抽出）                                             |
+| `max_cpu`                  |    | 最大 CPU（使用できるMemoryとの組み合わせ`"0.5-1Gi"`, `"1-1Gi"`, `"1-2Gi"`, `"2-2Gi"`,`"2-4Gi"`) |
+| `max_memory`               |    | 最大Memory（使用できるCPUとの組み合わせ`"0.5-1Gi"`, `"1-1Gi"`, `"1-2Gi"`, `"2-2Gi"`,`"2-4Gi"`) |
+| `timeout_seconds`          |    | アプリのタイムアウト（秒）                                                                |
+| `probe_path`               |    | ヘルスチェックの HTTP パス                                                             |
+| `probe_port`               |    | ヘルスチェックのポート番号                                                                |
+| `probe_headers`            |    | ヘルスチェックのヘッダ（YAML マップ: `Header-Name: "value"`）                                |
+| `env`                      | 　　 | サービス環境変数（YAML マップ: `KEY: "value"`） |
+| `packet_filter_enabled`    |    | パケットフィルターの有効化（true / false）                                                  |
+| `packet_filter_allowlist`  |    | 許可する送信元 CIDR のリスト（改行区切り）                                                     |
 
 > ℹ️ **YAML マップ入力について**
 > `env` と `probe_headers` は YAML を **キー/値のマップ**で記述します。

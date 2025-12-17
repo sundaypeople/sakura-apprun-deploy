@@ -56,7 +56,12 @@ inputs:
   env:
     description: 'App Run service environment'
     required: false
-
+  packet_filter_enabled:
+    description: 'Enable packet filter'
+    required: false
+  packet_filter_allowlist:
+    description: 'Allowed source CIDRs (newline separated). Example: "203.0.113.0/24"'
+    required: false
 
 outputs:
   public_url:

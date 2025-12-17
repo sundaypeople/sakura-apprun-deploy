@@ -27618,6 +27618,25 @@ class ApprunClient {
         const data = await response.json();
         return data;
     }
+    async patchPacketFilter(applicationID, packetFilter) {
+        const request = new Request(`${this.URL}applications/${applicationID}/packet_filter`, {
+            method: 'PATCH',
+            headers: {
+                Authorization: this.authHeader,
+            },
+            body: JSON.stringify(packetFilter),
+        });
+        const response = await fetch(request);
+        if (response.status >= 400) {
+            const errorText = await response.text();
+            throw new Error(`Failed to patch packet filter (id: ${applicationID}) — ` +
+                `status ${response.status} ${response.statusText} — ` +
+                `URL: ${this.URL}applications/${applicationID} — ` +
+                `Response: ${errorText}`);
+        }
+        const data = await response.json();
+        return data;
+    }
 }
 
 ;// CONCATENATED MODULE: ./node_modules/js-yaml/dist/js-yaml.mjs
@@ -31594,6 +31613,29 @@ function getCreateConfig(applicationName) {
             },
         };
     }
+    let packetFilterEnabledInput = (0,core.getBooleanInput)('packet_filter_enabled', {
+        required: false,
+        trimWhitespace: false,
+    });
+    if (!packetFilterEnabledInput) {
+        packetFilterEnabledInput = true;
+    }
+    const packetFilter = {
+        is_enabled: packetFilterEnabledInput,
+        settings: [],
+    };
+    const packetFilterInput = getStringInputUndefined('packet_filter_allowlist', true);
+    if (!packetFilterInput) {
+        const packetFilterArray = packetFilterInput?.split('\n');
+        if (typeof packetFilterArray !== 'undefined') {
+            packetFilterArray.forEach((packetFilterArray) => {
+                packetFilter.settings.push({
+                    from_ip: packetFilterArray.split('/')[0],
+                    from_ip_prefix_length: parseInt(packetFilterArray.split('/')[1]),
+                });
+            });
+        }
+    }
     const components = [
         {
             name: componentsName,
@@ -31619,7 +31661,7 @@ function getCreateConfig(applicationName) {
         max_scale: maxScale,
         components: components,
     };
-    return application;
+    return [application, packetFilter];
 }
 function getUpdateConfig(applicationName, applicationID) {
     const timeoutSeconds = getNumberInputUndefined('time_seconds');
@@ -31669,6 +31711,30 @@ function getUpdateConfig(applicationName, applicationID) {
             },
         };
     }
+    let packetFilterEnabledInput = (0,core.getBooleanInput)('packet_filter_enabled', {
+        required: false,
+        trimWhitespace: false,
+    });
+    if (!packetFilterEnabledInput) {
+        packetFilterEnabledInput = false;
+    }
+    const packetFilter = {
+        is_enabled: packetFilterEnabledInput,
+        settings: [],
+    };
+    const packetFilterInput = getStringInputUndefined('packet_filter_allowlist', true);
+    if (packetFilterInput) {
+        const packetFilterArray = packetFilterInput?.split('\n');
+        if (typeof packetFilterArray !== 'undefined') {
+            packetFilterArray.forEach((packetFilterArray) => {
+                packetFilter.settings.push({
+                    from_ip: packetFilterArray.split('/')[0],
+                    from_ip_prefix_length: parseInt(packetFilterArray.split('/')[1]),
+                });
+            });
+        }
+    }
+    console.log(JSON.stringify(packetFilter));
     const components = [
         {
             name: componentsName,
@@ -31695,7 +31761,7 @@ function getUpdateConfig(applicationName, applicationID) {
         max_scale: maxScale,
         components: components,
     };
-    return application;
+    return [application, packetFilter];
 }
 
 ;// CONCATENATED MODULE: ./src/main.ts
@@ -31711,16 +31777,20 @@ async function run() {
         for (const data of applications.data) {
             nameToIdMap.set(data.name, data.id);
         }
-        const application = getConfig(nameToIdMap);
+        const [application, packetFilter] = getConfig(nameToIdMap);
         let publicURL = '';
         if (!('id' in application)) {
             const result = await client.createApplication(application);
             console.log('create application:\n', JSON.stringify(result, null, 2));
+            const resultPacketfilter = await client.patchPacketFilter(result.id, packetFilter);
+            console.log('patch packet filter:\n', JSON.stringify(resultPacketfilter, null, 2));
             publicURL = result.public_url;
         }
         else {
             const result = await client.patchApplication(application);
             console.log('update application:\n', JSON.stringify(result, null, 2));
+            const resultPacketfilter = await client.patchPacketFilter(result.id, packetFilter);
+            console.log('patch packet filter:\n', JSON.stringify(resultPacketfilter, null, 2));
             publicURL = result.public_url;
         }
         (0,core.setOutput)('public_url', publicURL);
