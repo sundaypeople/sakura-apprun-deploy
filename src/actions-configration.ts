@@ -85,7 +85,6 @@ export function getCreateConfig(applicationName: string): model.CreateApplicatio
   const maxCpu = getStringInput('max_cpu', '0.5', false, true);
   const maxMemory = getStringInput('max_memory', '1Gi', false, true);
   const plan = `${maxCpu}-${maxMemory}`;
-  console.log(plan);
   if (!['0.5-1Gi', '1-1Gi', '1-2Gi', '2-2Gi', '2-4Gi'].includes(plan)) {
     throw new Error(`Invalid maxCPU and maxMemory value`);
   }
@@ -162,14 +161,13 @@ export function getUpdateConfig(applicationName: string, applicationID: string):
   const username = getStringInputUndefined('container_registry_username', true);
   const password = getStringInputUndefined('container_registry_password', true);
   const componentsName = getStringInput('componentsName', applicationName, false, true);
-  const maxCpu = getStringInput('max_cpu', '0.1', false, true);
-  if (!['0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1'].includes(maxCpu)) {
-    throw new Error(`Invalid maxCpu value`);
+  const maxCpu = getStringInput('max_cpu', '0.5', false, true);
+  const maxMemory = getStringInput('max_memory', '1Gi', false, true);
+  const plan = `${maxCpu}-${maxMemory}`;
+  if (!['0.5-1Gi', '1-1Gi', '1-2Gi', '2-2Gi', '2-4Gi'].includes(plan)) {
+    throw new Error(`Invalid maxCPU and maxMemory value`);
   }
-  const maxMemory = getStringInput('max_memory', '256Mi', false, true);
-  if (!['256Mi', '512Mi', '1Gi', '2Gi'].includes(maxMemory)) {
-    throw new Error(`Invalid maxMemory value`);
-  }
+
 
   const envInput = getStringInputUndefined('env', false);
   const env: Array<model.Env> = [];

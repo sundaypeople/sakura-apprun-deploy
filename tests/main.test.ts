@@ -199,7 +199,7 @@ describe('Behavior with mocked ApprunClient', () => {
 
     await run();
 
-    expect(mockCore.setFailed).toHaveBeenCalledWith('Invalid maxCpu value');
+    expect(mockCore.setFailed).toHaveBeenCalledWith('Invalid maxCPU and maxMemory value');
     expect(mockPatchApplication).not.toHaveBeenCalled();
   });
 
