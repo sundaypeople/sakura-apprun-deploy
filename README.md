@@ -57,7 +57,7 @@ jobs:
 
           # アプリ識別
           application_name: example
-          image: testnginx.sakuracr.jp/busy_server:v0.0.2 // デプロイするコンテナイメージ
+          image: testnginx.sakuracr.jp/busy_server:v0.0.2 # デプロイするコンテナイメージ
           server: testnginx.sakuracr.jp
 
           # ポート / スケール
@@ -100,7 +100,7 @@ jobs:
             1.1.1.1/32
 
       - name: Print URL
-        run: echo "Public URL: ${{ steps.deploy.outputs.public_url }}"
+        run: echo "Public URL${{ steps.deploy.outputs.public_url }}"
 ```
 
 ---
