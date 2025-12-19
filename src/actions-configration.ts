@@ -2,7 +2,9 @@ import { getBooleanInput, getInput } from '@actions/core';
 import * as model from './model';
 import * as yaml from 'js-yaml';
 
-export function getConfig(nameToIdMap: Map<string, string>): [model.CreateApplicationRequest, model.PatchPacketFilterRequest] | [model.PatchApplicationRequest, model.PatchPacketFilterRequest] {
+export function getConfig(
+  nameToIdMap: Map<string, string>,
+): [model.CreateApplicationRequest, model.PatchPacketFilterRequest, boolean] | [model.PatchApplicationRequest, model.PatchPacketFilterRequest, boolean] {
   const applicationName = getInput('application_name', {
     trimWhitespace: true,
   });
@@ -72,7 +74,7 @@ export function getAPIKey(): model.Access {
   return { token: accessToken, secret: accessSecret };
 }
 
-export function getCreateConfig(applicationName: string): [model.CreateApplicationRequest, model.PatchPacketFilterRequest] {
+export function getCreateConfig(applicationName: string): [model.CreateApplicationRequest, model.PatchPacketFilterRequest, boolean] {
   const timeoutSeconds = getNumberInput('time_seconds', 30, false);
   const port = getNumberInput('port', 80, false);
   const minScale = getNumberInput('min_scale', 0, false);
@@ -146,7 +148,6 @@ export function getCreateConfig(applicationName: string): [model.CreateApplicati
       });
     }
   }
-  console.log(packetFilter);
 
   const components: model.ComponentSpec[] = [
     {
@@ -174,10 +175,10 @@ export function getCreateConfig(applicationName: string): [model.CreateApplicati
     max_scale: maxScale,
     components: components,
   };
-  return [application, packetFilter];
+  return [application, packetFilter, false];
 }
 
-export function getUpdateConfig(applicationName: string, applicationID: string): [model.PatchApplicationRequest, model.PatchPacketFilterRequest] {
+export function getUpdateConfig(applicationName: string, applicationID: string): [model.PatchApplicationRequest, model.PatchPacketFilterRequest, boolean] {
   const timeoutSeconds = getNumberInputUndefined('time_seconds');
   const port = getNumberInputUndefined('port');
   const minScale = getNumberInputUndefined('min_scale');
@@ -189,6 +190,10 @@ export function getUpdateConfig(applicationName: string, applicationID: string):
   const componentsName = getStringInput('componentsName', applicationName, false, true);
   const maxCpu = getStringInput('max_cpu', '0.5', false, true);
   const maxMemory = getStringInput('max_memory', '1Gi', false, true);
+  const inheritEnv = getBooleanInput('inherit_env', {
+    required: false,
+    trimWhitespace: false,
+  });
   const plan = `${maxCpu}-${maxMemory}`;
   if (!['0.5-1Gi', '1-1Gi', '1-2Gi', '2-2Gi', '2-4Gi'].includes(plan)) {
     throw new Error(`Invalid maxCPU and maxMemory value`);
@@ -250,7 +255,6 @@ export function getUpdateConfig(applicationName: string, applicationID: string):
       });
     }
   }
-  console.log(JSON.stringify(packetFilter));
 
   const components: model.ComponentSpec[] = [
     {
@@ -279,5 +283,12 @@ export function getUpdateConfig(applicationName: string, applicationID: string):
     max_scale: maxScale,
     components: components,
   };
-  return [application, packetFilter];
+  return [application, packetFilter, inheritEnv];
+}
+
+export function replaceEnv(application: model.PatchApplicationRequest, pastApplication: model.GetApplicationResponse): model.PatchApplicationRequest {
+  if (typeof application.components !== 'undefined') {
+    application.components[0].env = pastApplication.components[0].env;
+  }
+  return application;
 }

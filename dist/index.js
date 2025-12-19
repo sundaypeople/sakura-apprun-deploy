@@ -27637,6 +27637,21 @@ class ApprunClient {
         const data = await response.json();
         return data;
     }
+    async getApplication(applicationID) {
+        const request = new Request(`${this.URL}applications/${applicationID}`, {
+            method: 'GET',
+            headers: {
+                Authorization: this.authHeader,
+            },
+        });
+        const response = await fetch(request);
+        if (response.status >= 400) {
+            const errorText = await response.text();
+            throw new Error(`Failed to get application (id: ${applicationID}) — ` + `status ${response.status} ${response.statusText} — ` + `URL: ${this.URL}applications/${applicationID} — ` + `Response: ${errorText}`);
+        }
+        const data = await response.json();
+        return data;
+    }
 }
 
 ;// CONCATENATED MODULE: ./node_modules/js-yaml/dist/js-yaml.mjs
@@ -31636,7 +31651,6 @@ function getCreateConfig(applicationName) {
             });
         }
     }
-    console.log(packetFilter);
     const components = [
         {
             name: componentsName,
@@ -31662,7 +31676,7 @@ function getCreateConfig(applicationName) {
         max_scale: maxScale,
         components: components,
     };
-    return [application, packetFilter];
+    return [application, packetFilter, false];
 }
 function getUpdateConfig(applicationName, applicationID) {
     const timeoutSeconds = getNumberInputUndefined('time_seconds');
@@ -31676,6 +31690,10 @@ function getUpdateConfig(applicationName, applicationID) {
     const componentsName = getStringInput('componentsName', applicationName, false, true);
     const maxCpu = getStringInput('max_cpu', '0.5', false, true);
     const maxMemory = getStringInput('max_memory', '1Gi', false, true);
+    const inheritEnv = (0,core.getBooleanInput)('inherit_env', {
+        required: false,
+        trimWhitespace: false,
+    });
     const plan = `${maxCpu}-${maxMemory}`;
     if (!['0.5-1Gi', '1-1Gi', '1-2Gi', '2-2Gi', '2-4Gi'].includes(plan)) {
         throw new Error(`Invalid maxCPU and maxMemory value`);
@@ -31735,7 +31753,6 @@ function getUpdateConfig(applicationName, applicationID) {
             });
         }
     }
-    console.log(JSON.stringify(packetFilter));
     const components = [
         {
             name: componentsName,
@@ -31762,7 +31779,13 @@ function getUpdateConfig(applicationName, applicationID) {
         max_scale: maxScale,
         components: components,
     };
-    return [application, packetFilter];
+    return [application, packetFilter, inheritEnv];
+}
+function replaceEnv(application, pastApplication) {
+    if (typeof application.components !== 'undefined') {
+        application.components[0].env = pastApplication.components[0].env;
+    }
+    return application;
 }
 
 ;// CONCATENATED MODULE: ./src/main.ts
@@ -31778,7 +31801,7 @@ async function run() {
         for (const data of applications.data) {
             nameToIdMap.set(data.name, data.id);
         }
-        const [application, packetFilter] = getConfig(nameToIdMap);
+        const [application, packetFilter, inheritEnv] = getConfig(nameToIdMap);
         let publicURL = '';
         if (!('id' in application)) {
             const result = await client.createApplication(application);
@@ -31788,7 +31811,14 @@ async function run() {
             publicURL = result.public_url;
         }
         else {
-            const result = await client.patchApplication(application);
+            let sendAppParam = application;
+            if (inheritEnv) {
+                if (typeof application.id === 'string') {
+                    const result = await client.getApplication(application.id);
+                    sendAppParam = replaceEnv(application, result);
+                }
+            }
+            const result = await client.patchApplication(sendAppParam);
             console.log('update application:\n', JSON.stringify(result, null, 2));
             const resultPacketfilter = await client.patchPacketFilter(result.id, packetFilter);
             console.log('patch packet filter:\n', JSON.stringify(resultPacketfilter, null, 2));

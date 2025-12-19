@@ -13,7 +13,7 @@ jobs:
         with:
           access_token: ${{ secrets.ACCESS_TOKEN }}
           access_secret: ${{ secrets.ACCESS_SECRET }}
-          application_name: example
+          application_name: example1
           port: "80"
           image: testinginx.sakuracr.jp/testnginx:v0.0.1
           container_registry_username: ${{ secrets.REGISTRY_USER }}
@@ -30,6 +30,7 @@ jobs:
           probe_headers: |
             X-Env: "dev"
             X-Token: "secret"
+          inherit_env: "true"
           env: |
             NODE_ENV: "production"
             LOG_LEVEL: "info"

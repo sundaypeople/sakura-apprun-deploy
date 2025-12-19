@@ -20,6 +20,7 @@ describe('Behavior with mocked ApprunClient', () => {
   const baseEnv = {
     ...originalEnv,
     INPUT_PACKET_FILTER_ENABLED: 'true',
+    INPUT_INHERIT_ENV: 'false',
   };
 
   const setEnv = (overrides: Record<string, string | undefined>) => {

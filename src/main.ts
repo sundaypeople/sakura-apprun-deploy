@@ -1,6 +1,6 @@
 import { setOutput, setFailed } from '@actions/core';
 import { ApprunClient } from './apprun-client';
-import { getAPIKey, getConfig } from './actions-configration';
+import { getAPIKey, getConfig, replaceEnv } from './actions-configration';
 import * as model from './model';
 
 export async function run(): Promise<void> {
@@ -13,7 +13,7 @@ export async function run(): Promise<void> {
     for (const data of applications.data) {
       nameToIdMap.set(data.name, data.id);
     }
-    const [application, packetFilter] = getConfig(nameToIdMap);
+    const [application, packetFilter, inheritEnv] = getConfig(nameToIdMap);
     let publicURL = '';
     if (!('id' in application)) {
       const result = await client.createApplication(application as model.CreateApplicationRequest);
@@ -22,7 +22,14 @@ export async function run(): Promise<void> {
       console.log('patch packet filter:\n', JSON.stringify(resultPacketfilter, null, 2));
       publicURL = result.public_url;
     } else {
-      const result = await client.patchApplication(application);
+      let sendAppParam = application;
+      if (inheritEnv) {
+        if (typeof application.id === 'string') {
+          const result = await client.getApplication(application.id);
+          sendAppParam = replaceEnv(application, result);
+        }
+      }
+      const result = await client.patchApplication(sendAppParam);
       console.log('update application:\n', JSON.stringify(result, null, 2));
       const resultPacketfilter = await client.patchPacketFilter(result.id, packetFilter);
       console.log('patch packet filter:\n', JSON.stringify(resultPacketfilter, null, 2));
