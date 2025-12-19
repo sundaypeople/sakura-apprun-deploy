@@ -56,6 +56,10 @@ inputs:
   env:
     description: 'App Run service environment'
     required: false
+  inherit_env:
+    description: 'Inherit environment variables from the previous deployment'
+    required: false
+    default: 'false'
   packet_filter_enabled:
     description: 'Enable packet filter'
     required: false
