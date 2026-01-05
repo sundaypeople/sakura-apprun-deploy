@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/sundaypeople/sakura-apprun-deploy#readme",
   "dependencies": {
-    "@actions/core": "^1.11.1",
+    "@actions/core": "^2.0.1",
     "@actions/github": "^6.0.1",
     "buffer": "^6.0.3",
     "js-yaml": "^4.1.1"
