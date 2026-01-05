@@ -81,4 +81,21 @@ export class ApprunClient implements model.IApprunClient {
     const data: model.PatchPacketFilterResponse = await response.json();
     return data;
   }
+  async getApplication(applicationID: string): Promise<model.GetApplicationResponse> {
+    const request = new Request(`${this.URL}applications/${applicationID}`, {
+      method: 'GET',
+      headers: {
+        Authorization: this.authHeader,
+      },
+    });
+    const response = await fetch(request);
+    if (response.status >= 400) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to get application (id: ${applicationID}) — ` + `status ${response.status} ${response.statusText} — ` + `URL: ${this.URL}applications/${applicationID} — ` + `Response: ${errorText}`,
+      );
+    }
+    const data: model.GetApplicationResponse = await response.json();
+    return data;
+  }
 }

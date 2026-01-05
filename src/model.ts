@@ -114,6 +114,20 @@ export interface GetAllApplicationResponse {
   }>;
 }
 
+export interface GetApplicationResponse {
+  id: string;
+  name: string;
+  timeout_seconds: number;
+  port: number;
+  min_scale: number;
+  max_scale: number;
+  components: ComponentSpec[];
+  status: string;
+  public_url: string;
+  resource_id: string;
+  update_at: string;
+}
+
 export interface PatchPacketFilterRequest {
   is_enabled: boolean;
   settings: Array<{

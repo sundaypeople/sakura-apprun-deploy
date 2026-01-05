@@ -89,6 +89,7 @@ jobs:
             X-Token: "${{ secrets.PROBE_TOKEN }}"
 
           # 環境変数（YAML マップ）
+          inherit_env: "false"
           env: |
             NODE_ENV: "production"
             LOG_LEVEL: "info"
@@ -126,7 +127,8 @@ jobs:
 | `probe_path`               |    | ヘルスチェックの HTTP パス                                                             |
 | `probe_port`               |    | ヘルスチェックのポート番号                                                                |
 | `probe_headers`            |    | ヘルスチェックのヘッダ（YAML マップ: `Header-Name: "value"`）                                |
-| `env`                      | 　　 | サービス環境変数（YAML マップ: `KEY: "value"`） |
+| `env`                      | 　　| サービス環境変数（YAML マップ: `KEY: "value"`） |
+| `inherit_env`              | 　　| 更新時にサービス環境変数を一つ前のから継承（true / false） |
 | `packet_filter_enabled`    |    | パケットフィルターの有効化（true / false）                                                  |
 | `packet_filter_allowlist`  |    | 許可する送信元 CIDR のリスト（改行区切り）                                                     |
 
