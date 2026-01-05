@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.0.5](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.4...v0.0.5) - 2026-01-05
+- fix README by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/28
+- add feat inherit env by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/31
+- Fix readme by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/32
+
 ## [v0.0.4](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.3...v0.0.4) - 2025-12-17
 - fix input packet filter by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/26
 
