@@ -7,6 +7,7 @@ export function getConfig(
 ): [model.CreateApplicationRequest, model.PatchPacketFilterRequest, boolean] | [model.PatchApplicationRequest, model.PatchPacketFilterRequest, boolean] {
   const applicationName = getInput('application_name', {
     trimWhitespace: true,
+    required: true,
   });
   const applicationID = nameToIdMap.get(applicationName);
   if (applicationID == undefined) {
@@ -75,7 +76,7 @@ export function getAPIKey(): model.Access {
 }
 
 export function getCreateConfig(applicationName: string): [model.CreateApplicationRequest, model.PatchPacketFilterRequest, boolean] {
-  const timeoutSeconds = getNumberInput('time_seconds', 30, false);
+  const timeoutSeconds = getNumberInput('timeout_seconds', 30, false);
   const port = getNumberInput('port', 80, false);
   const minScale = getNumberInput('min_scale', 0, false);
   const maxScale = getNumberInput('max_scale', 10, false);
@@ -179,7 +180,7 @@ export function getCreateConfig(applicationName: string): [model.CreateApplicati
 }
 
 export function getUpdateConfig(applicationName: string, applicationID: string): [model.PatchApplicationRequest, model.PatchPacketFilterRequest, boolean] {
-  const timeoutSeconds = getNumberInputUndefined('time_seconds');
+  const timeoutSeconds = getNumberInputUndefined('timeout_seconds');
   const port = getNumberInputUndefined('port');
   const minScale = getNumberInputUndefined('min_scale');
   const maxScale = getNumberInputUndefined('max_scale');
