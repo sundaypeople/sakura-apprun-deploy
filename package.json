@@ -8,7 +8,9 @@
     "build": "ncc build src/index.ts -o dist",
     "lint": "npx eslint",
     "format": "npx prettier tests/* src/* mocks/* --write",
-    "test": "node --no-warnings --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "format:write": "npx prettier --write .",
+    "format:check": "npx prettier --check .",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -17,7 +19,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/sundaypeople/sakura-apprun-deploy/issues"
   },
@@ -29,11 +31,12 @@
     "js-yaml": "^4.1.1"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.38.4",
     "@babel/preset-typescript": "^7.28.5",
     "@eslint/js": "^9.39.1",
+    "@types/jest": "^30.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.10.1",
+    "@vercel/ncc": "^0.38.4",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
