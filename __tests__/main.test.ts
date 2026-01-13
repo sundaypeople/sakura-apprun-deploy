@@ -144,9 +144,7 @@ describe('main.ts', () => {
   const getBooleanInputMock = jest.mocked(getBooleanInput);
   const setFailedMock = jest.mocked(setFailed);
   const createApplicationMock = jest.mocked(createApplication);
-  const getAllApplicationMock = jest.mocked(getAllApplication);
   const patchApplicationMock = jest.mocked(patchApplication);
-  const patchPacketFilterMock = jest.mocked(patchPacketFilter);
   const getApplicationMock = jest.mocked(getApplication);
 
   beforeEach(() => {
