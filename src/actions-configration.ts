@@ -188,17 +188,18 @@ export function getUpdateConfig(applicationName: string, applicationID: string):
   const server = getStringInput('server', typeof image == 'undefined' ? '' : image?.split('/')[0], false, true);
   const username = getStringInputUndefined('container_registry_username', true);
   const password = getStringInputUndefined('container_registry_password', true);
-  const componentsName = getStringInput('componentsName', applicationName, false, true);
+  const componentsName = getStringInput('components_name', applicationName, false, true);
   const maxCpu = getStringInput('max_cpu', '0.5', false, true);
   const maxMemory = getStringInput('max_memory', '1Gi', false, true);
-  const inheritEnv = getBooleanInput('inherit_env', {
-    required: false,
-    trimWhitespace: false,
-  });
+
   const plan = `${maxCpu}-${maxMemory}`;
   if (!['0.5-1Gi', '1-1Gi', '1-2Gi', '2-2Gi', '2-4Gi'].includes(plan)) {
     throw new Error(`Invalid maxCPU and maxMemory value`);
   }
+  const inheritEnv = getBooleanInput('inherit_env', {
+    required: false,
+    trimWhitespace: false,
+  });
   const envInput = getStringInputUndefined('env', false);
   const env: Array<model.Env> = [];
   if (typeof envInput !== 'undefined') {
