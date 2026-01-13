@@ -1,11 +1,10 @@
 import { run } from '../src/main';
 import { getBooleanInput, getInput, setFailed } from '@actions/core';
 import { getFakeBooleanInput, getFakeInput } from '../testutils/testutils';
-import { getAllApplication, patchPacketFilter, createApplication, getApplication, patchApplication } from '../src/apprun-client';
+import { patchPacketFilter, createApplication, getApplication, patchApplication } from '../src/apprun-client';
 import { jest } from '@jest/globals';
 import * as model from '../src/model';
 import { Buffer } from 'node:buffer';
-import { describe } from 'node:test';
 
 jest.mock('@actions/core');
 
