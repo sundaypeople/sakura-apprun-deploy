@@ -22,7 +22,7 @@ jobs:
 
       - name: Deploy
         id: apprun
-        uses: sundaypeople/sakura-apprun-deploy@v0.0.5
+        uses: sundaypeople/sakura-apprun-deploy@v0.0.6
         with:
           access_token: ${{ secrets.APPRUN_ACCESS_TOKEN }}
           access_secret: ${{ secrets.APPRUN_ACCESS_SECRET }}
@@ -49,7 +49,7 @@ jobs:
 
       - name: Deploy to Apprun
         id: deploy
-        uses: sundaypeople/sakura-apprun-deploy@v0.0.5
+        uses: sundaypeople/sakura-apprun-deploy@v0.0.6
         with:
           # 認証（必須）
           access_token:  ${{ secrets.APPRUN_ACCESS_TOKEN }}
