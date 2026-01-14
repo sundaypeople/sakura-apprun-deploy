@@ -25,3 +25,4 @@ jobs:
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "true"
           github_action_config.auto_improve: "true"
+          PR_AGENT_CUSTOM_MODEL_MAX_TOKENS: "32000"
