@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.0.6](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.5...v0.0.6) - 2026-01-14
+- Feat/refact by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/35
+- add pr-agent by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/37
+- Bump the dependencies group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/sundaypeople/sakura-apprun-deploy/pull/34
+- Bump the devdependencies group across 1 directory with 7 updates by @dependabot[bot] in https://github.com/sundaypeople/sakura-apprun-deploy/pull/33
+- change action version in README.md by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/38
+- fix pr agent by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/40
+
 ## [v0.0.5](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.4...v0.0.5) - 2026-01-05
 - fix README by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/28
 - add feat inherit env by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/31
