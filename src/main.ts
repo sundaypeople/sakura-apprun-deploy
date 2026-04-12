@@ -17,7 +17,15 @@ export async function run(): Promise<void> {
     let publicURL = '';
     if (!('id' in application)) {
       const result = await createApplication(client, application as model.CreateApplicationRequest);
-      console.log('create application:\n', JSON.stringify(result, null, 2));
+      // AppRun Shared doesn't have a dedicated secrets store.
+      // Secrets should be passed as environment variables and must be masked in logs.
+      const showResult = structuredClone(result);
+      showResult.components.forEach((component) => {
+        component.env?.forEach((env) => {
+          env.value = '***';
+        });
+      });
+      console.log('create application:\n', JSON.stringify(showResult, null, 2));
       const resultPacketFilter = await patchPacketFilter(client, result.id, packetFilter);
       console.log('patch packet filter:\n', JSON.stringify(resultPacketFilter, null, 2));
       publicURL = result.public_url;
@@ -30,7 +38,15 @@ export async function run(): Promise<void> {
         }
       }
       const result = await patchApplication(client, sendAppParam);
-      console.log('update application:\n', JSON.stringify(result, null, 2));
+      // AppRun Shared doesn't have a dedicated secrets store.
+      // Secrets should be passed as environment variables and must be masked in logs.
+      const showResult = structuredClone(result);
+      showResult.components.forEach((component) => {
+        component.env?.forEach((env) => {
+          env.value = '***';
+        });
+      });
+      console.log('update application:\n', JSON.stringify(showResult, null, 2));
       const resultPacketFilter = await patchPacketFilter(client, result.id, packetFilter);
       console.log('patch packet filter:\n', JSON.stringify(resultPacketFilter, null, 2));
       publicURL = result.public_url;
