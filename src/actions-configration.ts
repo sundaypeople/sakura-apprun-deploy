@@ -81,9 +81,18 @@ export function getCreateConfig(applicationName: string): [model.CreateApplicati
   const minScale = getNumberInput('min_scale', 0, false);
   const maxScale = getNumberInput('max_scale', 10, false);
   const image = getStringInput('image', '', true, true);
-  const server = getStringInput('server', typeof image == 'undefined' ? '' : image?.split('/')[0], false, true);
+  let server = getStringInputUndefined('server', true);
   const username = getStringInputUndefined('container_registry_username', true);
   const password = getStringInputUndefined('container_registry_password', true);
+  if (!((typeof username === 'undefined' && typeof password === 'undefined') || (typeof username === 'string' && typeof password === 'string'))) {
+    throw new Error(`Authentication to Container Registry requires Username, and Password`);
+  }
+  if (typeof server === 'undefined' && typeof username === 'string' && typeof password === 'string') {
+    server = image?.split('/')[0];
+  }
+  if (typeof username === 'undefined' && typeof password === 'undefined') {
+    server = undefined;
+  }
   const componentsName = getStringInput('components_name', applicationName, false, true);
   const maxCpu = getStringInput('max_cpu', '0.5', false, true);
   const maxMemory = getStringInput('max_memory', '1Gi', false, true);
@@ -150,7 +159,7 @@ export function getCreateConfig(applicationName: string): [model.CreateApplicati
     }
   }
 
-  const components: model.ComponentSpec[] = [
+  const components: model.CreateComponentSpec[] = [
     {
       name: componentsName,
       max_cpu: maxCpu,
@@ -185,9 +194,26 @@ export function getUpdateConfig(applicationName: string, applicationID: string):
   const minScale = getNumberInputUndefined('min_scale');
   const maxScale = getNumberInputUndefined('max_scale');
   const image = getStringInput('image', '', true, true);
-  const server = getStringInput('server', typeof image == 'undefined' ? '' : image?.split('/')[0], false, true);
+  let server = getStringInputUndefined('server', true);
   const username = getStringInputUndefined('container_registry_username', true);
   const password = getStringInputUndefined('container_registry_password', true);
+  if (!((typeof username === 'undefined' && typeof password === 'undefined') || (typeof username === 'string' && typeof password === 'string'))) {
+    throw new Error(`Authentication to Container Registry requires Username, and Password`);
+  }
+  if (typeof server === 'undefined' && typeof username === 'string' && typeof password === 'string') {
+    server = image?.split('/')[0];
+  }
+  if (typeof username === 'undefined' && typeof password === 'undefined') {
+    server = undefined;
+  }
+  const action = getStringInputUndefined('container_registry_action', true);
+  if (typeof action !== 'undefined' && !['new', 'keep'].includes(action)) {
+    throw new Error(`Invalid action value`);
+  }
+  if (typeof action !== 'undefined' && action === 'keep' && typeof server !== 'undefined' && typeof username !== 'undefined' && typeof password !== 'undefined') {
+    throw new Error(`Invalid Server, Username or Password must not be specified when Action is set to keep`);
+  }
+
   const componentsName = getStringInput('components_name', applicationName, false, true);
   const maxCpu = getStringInput('max_cpu', '0.5', false, true);
   const maxMemory = getStringInput('max_memory', '1Gi', false, true);
@@ -258,7 +284,7 @@ export function getUpdateConfig(applicationName: string, applicationID: string):
     }
   }
 
-  const components: model.ComponentSpec[] = [
+  const components: model.PatchComponentSpec[] = [
     {
       name: componentsName,
       max_cpu: maxCpu,
@@ -269,6 +295,7 @@ export function getUpdateConfig(applicationName: string, applicationID: string):
           server: server,
           username: username,
           password: password,
+          action: action,
         },
       },
       env: env,

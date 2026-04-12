@@ -60,6 +60,12 @@ jobs:
           image: testnginx.sakuracr.jp/busy_server:v0.0.2 # デプロイするコンテナイメージ
           server: testnginx.sakuracr.jp
 
+          # レジストリ（プライベートの場合）
+          container_registry_username: ${{ secrets.REGISTRY_USER }}
+          container_registry_password: ${{ secrets.REGISTRY_PASS }}
+          container_registry_action: 'new'
+
+
           # ポート / スケール
           port: 8080
           min_scale: 0
@@ -68,11 +74,7 @@ jobs:
           # コンポーネント名（省略時は application_name）
           components_name: example
 
-          # レジストリ（プライベートの場合）
-          container_registry_username: ${{ secrets.REGISTRY_USER }}
-          container_registry_password: ${{ secrets.REGISTRY_PASS }}
-          server: testnginx.sakuracr.jp
-
+         
           # リソース上限
           max_cpu: "0.5"     
           max_memory: "512Mi" 
@@ -113,14 +115,15 @@ jobs:
 | `access_token`             | ✔︎ | Apprun の API アクセストークン                                                        |
 | `access_secret`            | ✔︎ | Apprun の API アクセスシークレット                                                      |
 | `application_name`         | ✔︎ | アプリケーション名（作成/更新のキー）                                                          |
-| `image`                    | ✔︎ | デプロイするコンテナイメージ（例: `registry.example.com/ns/app:tag`）                         |
 | `port`                     |    | アプリがリッスンするポート番号                                                              |
+| `image`                    | ✔︎ | デプロイするコンテナイメージ（例: `registry.example.com/ns/app:tag`）                         |
+| `server`                   |    | レジストリのサーバー名（省略時は `image` から自動抽出、認証ありの場合は `image` から自動抽出。`keep`時は指定不可） |
 | `container_registry_username` |    | コンテナレジストリのユーザー名                                                              |
 | `container_registry_password` |    | コンテナレジストリのパスワード                                                              |
+| `container_registry_action`   |    | コンテナレジストリの動作（`new`: 新規作成/更新, `keep`: 前回の設定を維持）                                 |
 | `min_scale`                |    | 最小インスタンス数                                                                    |
 | `max_scale`                |    | 最大インスタンス数                                                                    |
 | `components_name`          |    | コンポーネント名（省略時 `application_name`）                                             |
-| `server`                   |    | レジストリのサーバー名（省略時は `image` から自動抽出）                                             |
 | `max_cpu`                  |    | 最大 CPU（使用できるMemoryとの組み合わせ`"0.5-1Gi"`, `"1-1Gi"`, `"1-2Gi"`, `"2-2Gi"`,`"2-4Gi"`) |
 | `max_memory`               |    | 最大Memory（使用できるCPUとの組み合わせ`"0.5-1Gi"`, `"1-1Gi"`, `"1-2Gi"`, `"2-2Gi"`,`"2-4Gi"`) |
 | `timeout_seconds`          |    | アプリのタイムアウト（秒）                                                                |

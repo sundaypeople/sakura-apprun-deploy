@@ -23,7 +23,7 @@ export interface CreateApplicationRequest {
   timeout_seconds: number;
   min_scale: number;
   max_scale: number;
-  components: ComponentSpec[];
+  components: CreateComponentSpec[];
 }
 
 export interface CreateApplicationResponse {
@@ -33,11 +33,27 @@ export interface CreateApplicationResponse {
   port: number;
   min_scale: number;
   max_scale: number;
-  components: ComponentSpec[];
+  components: CreateComponentSpec[];
   status: string;
   public_url: string;
   resource_id: string;
   created_at: string;
+}
+
+export interface CreateComponentSpec {
+  name: string;
+  max_cpu: string;
+  max_memory: string;
+  deploy_source: {
+    container_registry: {
+      image: string;
+      server?: string;
+      username?: string;
+      password?: string;
+    };
+  };
+  env?: Array<Env>;
+  probe?: Probe;
 }
 
 // ----------------------------
@@ -50,7 +66,7 @@ export interface PatchApplicationRequest {
   timeout_seconds?: number;
   min_scale?: number;
   max_scale?: number;
-  components?: ComponentSpec[];
+  components?: PatchComponentSpec[];
 }
 
 export interface PatchApplicationResponse {
@@ -60,14 +76,14 @@ export interface PatchApplicationResponse {
   port: number;
   min_scale: number;
   max_scale: number;
-  components: ComponentSpec[];
+  components: PatchComponentSpec[];
   status: string;
   public_url: string;
   resource_id: string;
   update_at: string;
 }
 
-export interface ComponentSpec {
+export interface PatchComponentSpec {
   name: string;
   max_cpu: string;
   max_memory: string;
@@ -77,6 +93,7 @@ export interface ComponentSpec {
       server?: string;
       username?: string;
       password?: string;
+      action?: string;
     };
   };
   env?: Array<Env>;
@@ -121,7 +138,7 @@ export interface GetApplicationResponse {
   port: number;
   min_scale: number;
   max_scale: number;
-  components: ComponentSpec[];
+  components: CreateComponentSpec[];
   status: string;
   public_url: string;
   resource_id: string;
