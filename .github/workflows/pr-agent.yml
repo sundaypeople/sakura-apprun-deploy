@@ -17,12 +17,13 @@ jobs:
         uses: qodo-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI.API_BASE: https://api.ai.sakura.ad.jp/v1
-          OPENAI.API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          config.model: "Qwen3-Coder-480B-A35B-Instruct-FP8"
+          OPENAI_API_BASE: https://api.ai.sakura.ad.jp/v1
+          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
+          config.model: "openai/Qwen3-Coder-480B-A35B-Instruct-FP8"
           PR_REVIEWER.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
           PR_DESCRIPTION.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions. Titles should have prefix of commitlint pattern such as `feat:`, `chore:`, `test:`, `fix:`, `ci:`, `docs:` etc"
+          PR_DESCRIPTION.EXTRA_IMPROVE: "Please use Japanese in descriptions. Titles should have prefix of commitlint pattern such as `feat:`, `chore:`, `test:`, `fix:`, `ci:`, `docs:` etc"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "true"
           github_action_config.auto_improve: "true"
-          PR_AGENT_CUSTOM_MODEL_MAX_TOKENS: "32000"
+          config.custom_model_max_tokens: "320000"

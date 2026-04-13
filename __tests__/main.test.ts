@@ -164,7 +164,7 @@ describe('main.ts', () => {
         expectedOutput: {
           components: [
             {
-              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: 'nginx.sakuracr.jp', username: undefined } },
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: undefined, username: undefined } },
               env: undefined,
               max_cpu: '0.5',
               max_memory: '1Gi',
@@ -333,7 +333,7 @@ LOG_LEVEL: "info"`,
         expectedOutput: {
           components: [
             {
-              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/another/nginx:latest', password: undefined, server: 'nginx.sakuracr.jp', username: undefined } },
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/another/nginx:latest', password: undefined, server: undefined, username: undefined } },
               env: undefined,
               max_cpu: '0.5',
               max_memory: '1Gi',
@@ -361,7 +361,7 @@ LOG_LEVEL: "info"`,
         expectedOutput: {
           components: [
             {
-              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp', password: undefined, server: 'nginx.sakuracr.jp', username: undefined } },
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp', password: undefined, server: undefined, username: undefined } },
               env: undefined,
               max_cpu: '0.5',
               max_memory: '1Gi',
@@ -377,7 +377,37 @@ LOG_LEVEL: "info"`,
         },
       },
       {
-        name: 'Success set server option',
+        name: 'Success set server option (has authentication)',
+        input: {
+          access_token: 'access_token',
+          access_secret: 'access_secret',
+          application_name: 'test',
+          image: 'nginx.sakuracr.jp/nginx:latest',
+          container_registry_username: 'test',
+          container_registry_password: 'test',
+          inherit_env: 'false',
+          packet_filter_enabled: 'false',
+        },
+        expectedOutput: {
+          components: [
+            {
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', server: 'nginx.sakuracr.jp', username: 'test', password: 'test' } },
+              env: undefined,
+              max_cpu: '0.5',
+              max_memory: '1Gi',
+              name: 'test',
+              probe: undefined,
+            },
+          ],
+          max_scale: 10,
+          min_scale: 0,
+          name: 'test',
+          port: 80,
+          timeout_seconds: 30,
+        },
+      },
+      {
+        name: 'Success set server option (undefined)',
         input: {
           access_token: 'access_token',
           access_secret: 'access_secret',
@@ -390,7 +420,7 @@ LOG_LEVEL: "info"`,
         expectedOutput: {
           components: [
             {
-              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: 'container.example.com', username: undefined } },
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: undefined, username: undefined } },
               env: undefined,
               max_cpu: '0.5',
               max_memory: '1Gi',
@@ -424,7 +454,7 @@ ANOTHER_MAP: |
         expectedOutput: {
           components: [
             {
-              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: 'nginx.sakuracr.jp', username: undefined } },
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: undefined, username: undefined } },
               env: [
                 {
                   key: 'NODE_ENV',
@@ -487,6 +517,28 @@ ANOTHER_MAP: |
           application_name: 'test',
         },
         expectedError: 'image is required',
+      },
+      {
+        name: 'Only the username is missing in container registry authentication info',
+        input: {
+          access_token: 'access_token',
+          access_secret: 'access_secret',
+          application_name: 'test',
+          image: 'nginx.sakuracr.jp/nginx:latest',
+          container_registry_password: 'password',
+        },
+        expectedError: 'Authentication to Container Registry requires Username and Password',
+      },
+      {
+        name: 'Only the password is missing in container registry authentication info',
+        input: {
+          access_token: 'access_token',
+          access_secret: 'access_secret',
+          application_name: 'test',
+          image: 'nginx.sakuracr.jp/nginx:latest',
+          container_registry_username: 'username',
+        },
+        expectedError: 'Authentication to Container Registry requires Username and Password',
       },
       {
         name: 'Invalid timeout_seconds (NaN)',
@@ -722,7 +774,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
           id: '0e63e868-ee29-4cd2-bbd1-79f3c10d19cc',
           components: [
             {
-              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: 'nginx.sakuracr.jp', username: undefined } },
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: undefined, username: undefined } },
               env: [],
               max_cpu: '0.5',
               max_memory: '1Gi',
@@ -751,6 +803,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
           server: 'container.qpid.com',
           container_registry_username: 'username',
           container_registry_password: 'password',
+          container_registry_action: 'new',
           components_name: 'componentName',
           max_cpu: '1',
           max_memory: '1Gi',
@@ -769,7 +822,7 @@ LOG_LEVEL: "info"`,
           id: '0e63e868-ee29-4cd2-bbd1-79f3c10d19cc',
           components: [
             {
-              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: 'password', server: 'container.qpid.com', username: 'username' } },
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: 'password', server: 'container.qpid.com', username: 'username', action: 'new' } },
               env: [
                 {
                   key: 'NODE_ENV',
@@ -815,6 +868,83 @@ LOG_LEVEL: "info"`,
           ],
         },
       },
+      {
+        name: 'Success with full options with action keep',
+        input: {
+          access_token: 'aaa',
+          access_secret: 'bbb',
+          application_name: 'test-application',
+          timeout_seconds: '500',
+          port: '80',
+          min_scale: '1',
+          max_scale: '2',
+          image: 'nginx.sakuracr.jp/nginx:latest',
+          container_registry_action: 'keep',
+          components_name: 'componentName',
+          max_cpu: '1',
+          max_memory: '1Gi',
+          env: `NODE_ENV: "production"
+LOG_LEVEL: "info"`,
+          inherit_env: 'false',
+          probe_path: '/',
+          probe_port: '80',
+          probe_headers: `NODE_ENV: "production"
+LOG_LEVEL: "info"`,
+          packet_filter_enabled: 'true',
+          packet_filter_allowlist: `0.0.0.0/0
+1.1.1.1/32`,
+        },
+        expectedOutput: {
+          id: '0e63e868-ee29-4cd2-bbd1-79f3c10d19cc',
+          components: [
+            {
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', action: 'keep' } },
+              env: [
+                {
+                  key: 'NODE_ENV',
+                  value: 'production',
+                },
+                {
+                  key: 'LOG_LEVEL',
+                  value: 'info',
+                },
+              ],
+              max_cpu: '1',
+              max_memory: '1Gi',
+              name: 'componentName',
+              probe: {
+                http_get: {
+                  path: '/',
+                  port: 80,
+                  headers: [
+                    { name: 'NODE_ENV', value: 'production' },
+                    { name: 'LOG_LEVEL', value: 'info' },
+                  ],
+                },
+              },
+            },
+          ],
+          max_scale: 2,
+          min_scale: 1,
+          name: 'test-application',
+          port: 80,
+          timeout_seconds: 500,
+        },
+        expectedOutputPacketFilter: {
+          is_enabled: true,
+          settings: [
+            {
+              from_ip: '0.0.0.0',
+              from_ip_prefix_length: 0,
+            },
+            {
+              from_ip: '1.1.1.1',
+              from_ip_prefix_length: 32,
+            },
+          ],
+        },
+      },
+
       {
         name: 'Success with full options inherit_env',
         id: '0e63e868-ee29-4cd2-bbd1-79f3c10d19cc',
@@ -904,7 +1034,7 @@ LOG_LEVEL: "info"`,
           id: '0e63e868-ee29-4cd2-bbd1-79f3c10d19cc',
           components: [
             {
-              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/another/nginx:latest', password: undefined, server: 'nginx.sakuracr.jp', username: undefined } },
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/another/nginx:latest', password: undefined, server: undefined, username: undefined } },
               env: [],
               max_cpu: '0.5',
               max_memory: '1Gi',
@@ -933,7 +1063,7 @@ LOG_LEVEL: "info"`,
           id: '0e63e868-ee29-4cd2-bbd1-79f3c10d19cc',
           components: [
             {
-              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp', password: undefined, server: 'nginx.sakuracr.jp', username: undefined } },
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp', password: undefined, server: undefined, username: undefined } },
               env: [],
               max_cpu: '0.5',
               max_memory: '1Gi',
@@ -949,7 +1079,38 @@ LOG_LEVEL: "info"`,
         },
       },
       {
-        name: 'Success set server option',
+        name: 'Success set server option (has authentication)',
+        input: {
+          access_token: 'access_token',
+          access_secret: 'access_secret',
+          application_name: 'test-application',
+          image: 'nginx.sakuracr.jp/nginx:latest',
+          container_registry_username: 'username',
+          container_registry_password: 'password',
+          inherit_env: 'false',
+          packet_filter_enabled: 'false',
+        },
+        expectedOutput: {
+          id: '0e63e868-ee29-4cd2-bbd1-79f3c10d19cc',
+          components: [
+            {
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', server: 'nginx.sakuracr.jp', username: 'username', password: 'password' } },
+              env: [],
+              max_cpu: '0.5',
+              max_memory: '1Gi',
+              name: 'test-application',
+              probe: undefined,
+            },
+          ],
+          max_scale: undefined,
+          min_scale: undefined,
+          name: 'test-application',
+          port: undefined,
+          timeout_seconds: undefined,
+        },
+      },
+      {
+        name: 'Success set server option (Undefined)',
         input: {
           access_token: 'access_token',
           access_secret: 'access_secret',
@@ -963,7 +1124,7 @@ LOG_LEVEL: "info"`,
           id: '0e63e868-ee29-4cd2-bbd1-79f3c10d19cc',
           components: [
             {
-              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: 'container.example.com', username: undefined } },
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: undefined, username: undefined } },
               env: [],
               max_cpu: '0.5',
               max_memory: '1Gi',
@@ -998,7 +1159,7 @@ ANOTHER_MAP: |
           id: '0e63e868-ee29-4cd2-bbd1-79f3c10d19cc',
           components: [
             {
-              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: 'nginx.sakuracr.jp', username: undefined } },
+              deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: undefined, username: undefined } },
               env: [
                 {
                   key: 'NODE_ENV',
@@ -1061,6 +1222,54 @@ ANOTHER_MAP: |
           application_name: 'test-application',
         },
         expectedError: 'image is required',
+      },
+      {
+        name: 'Only the username is missing in container registry authentication info',
+        input: {
+          access_token: 'access_token',
+          access_secret: 'access_secret',
+          application_name: 'test-application',
+          image: 'nginx.sakuracr.jp/nginx:latest',
+          container_registry_password: 'password',
+        },
+        expectedError: 'Authentication to Container Registry requires Username and Password',
+      },
+      {
+        name: 'Only the password is missing in container registry authentication info',
+        input: {
+          access_token: 'access_token',
+          access_secret: 'access_secret',
+          application_name: 'test-application',
+          image: 'nginx.sakuracr.jp/nginx:latest',
+          container_registry_username: 'username',
+        },
+        expectedError: 'Authentication to Container Registry requires Username and Password',
+      },
+      {
+        name: 'Invalid action value',
+        input: {
+          access_token: 'access_token',
+          access_secret: 'access_secret',
+          application_name: 'test-application',
+          image: 'nginx.sakuracr.jp/nginx:latest',
+          container_registry_username: 'username',
+          container_registry_password: 'password',
+          container_registry_action: 'a',
+        },
+        expectedError: 'Invalid action value',
+      },
+      {
+        name: 'do not input username and password action is keep',
+        input: {
+          access_token: 'access_token',
+          access_secret: 'access_secret',
+          application_name: 'test-application',
+          image: 'nginx.sakuracr.jp/nginx:latest',
+          container_registry_username: 'username',
+          container_registry_password: 'password',
+          container_registry_action: 'keep',
+        },
+        expectedError: 'Invalid Server, Username or Password must not be specified when Action is set to keep',
       },
       {
         name: 'Invalid timeout_seconds (NaN)',

@@ -16,14 +16,15 @@ jobs:
           application_name: example1
           port: "80"
           image: testinginx.sakuracr.jp/testnginx:v0.0.1
+          server: testinginx.sakuracr.jp
           container_registry_username: ${{ secrets.REGISTRY_USER }}
           container_registry_password: ${{ secrets.REGISTRY_PASS }}
+          container_registry_action: 'new'
+
           min_scale: "0"
           max_scale: "2"
           components_name: example
-          server: testinginx.sakuracr.jp
-          max_cpu: "0.5"
-          max_memory: "1Gi"
+
           timeout_seconds: 60
           probe_path: /
           probe_port: "80"

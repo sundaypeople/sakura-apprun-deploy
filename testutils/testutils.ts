@@ -11,6 +11,7 @@ export interface FakeInput {
   server?: string;
   container_registry_username?: string;
   container_registry_password?: string;
+  container_registry_action?: string;
   components_name?: string;
   max_cpu?: string;
   max_memory?: string;

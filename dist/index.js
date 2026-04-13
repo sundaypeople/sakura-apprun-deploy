@@ -31697,9 +31697,18 @@ function getCreateConfig(applicationName) {
     const minScale = getNumberInput('min_scale', 0, false);
     const maxScale = getNumberInput('max_scale', 10, false);
     const image = getStringInput('image', '', true, true);
-    const server = getStringInput('server', typeof image == 'undefined' ? '' : image?.split('/')[0], false, true);
+    let server = getStringInputUndefined('server', true);
     const username = getStringInputUndefined('container_registry_username', true);
     const password = getStringInputUndefined('container_registry_password', true);
+    if (!((typeof username === 'undefined' && typeof password === 'undefined') || (typeof username === 'string' && typeof password === 'string'))) {
+        throw new Error(`Authentication to Container Registry requires Username, and Password`);
+    }
+    if (typeof server === 'undefined' && typeof username === 'string' && typeof password === 'string') {
+        server = image?.split('/')[0];
+    }
+    if (typeof username === 'undefined' && typeof password === 'undefined') {
+        server = undefined;
+    }
     const componentsName = getStringInput('components_name', applicationName, false, true);
     const maxCpu = getStringInput('max_cpu', '0.5', false, true);
     const maxMemory = getStringInput('max_memory', '1Gi', false, true);
@@ -31795,9 +31804,25 @@ function getUpdateConfig(applicationName, applicationID) {
     const minScale = getNumberInputUndefined('min_scale');
     const maxScale = getNumberInputUndefined('max_scale');
     const image = getStringInput('image', '', true, true);
-    const server = getStringInput('server', typeof image == 'undefined' ? '' : image?.split('/')[0], false, true);
+    let server = getStringInputUndefined('server', true);
     const username = getStringInputUndefined('container_registry_username', true);
     const password = getStringInputUndefined('container_registry_password', true);
+    if (!((typeof username === 'undefined' && typeof password === 'undefined') || (typeof username === 'string' && typeof password === 'string'))) {
+        throw new Error(`Authentication to Container Registry requires Username, and Password`);
+    }
+    if (typeof server === 'undefined' && typeof username === 'string' && typeof password === 'string') {
+        server = image?.split('/')[0];
+    }
+    if (typeof username === 'undefined' && typeof password === 'undefined') {
+        server = undefined;
+    }
+    const action = getStringInputUndefined('container_registry_action', true);
+    if (typeof action !== 'undefined' && !['new', 'keep'].includes(action)) {
+        throw new Error(`Invalid action value`);
+    }
+    if (typeof action !== 'undefined' && action === 'keep' && typeof server !== 'undefined' && typeof username !== 'undefined' && typeof password !== 'undefined') {
+        throw new Error(`Invalid Server, Username or Password must not be specified when Action is set to keep`);
+    }
     const componentsName = getStringInput('components_name', applicationName, false, true);
     const maxCpu = getStringInput('max_cpu', '0.5', false, true);
     const maxMemory = getStringInput('max_memory', '1Gi', false, true);
@@ -31875,6 +31900,7 @@ function getUpdateConfig(applicationName, applicationID) {
                     server: server,
                     username: username,
                     password: password,
+                    action: action,
                 },
             },
             env: env,
@@ -31916,7 +31942,15 @@ async function run() {
         let publicURL = '';
         if (!('id' in application)) {
             const result = await createApplication(client, application);
-            console.log('create application:\n', JSON.stringify(result, null, 2));
+            // AppRun Shared doesn't have a dedicated secrets store.
+            // Secrets should be passed as environment variables and must be masked in logs.
+            const showResult = structuredClone(result);
+            showResult.components.forEach((component) => {
+                component.env?.forEach((env) => {
+                    env.value = '***';
+                });
+            });
+            console.log('create application:\n', JSON.stringify(showResult, null, 2));
             const resultPacketFilter = await patchPacketFilter(client, result.id, packetFilter);
             console.log('patch packet filter:\n', JSON.stringify(resultPacketFilter, null, 2));
             publicURL = result.public_url;
@@ -31930,7 +31964,15 @@ async function run() {
                 }
             }
             const result = await patchApplication(client, sendAppParam);
-            console.log('update application:\n', JSON.stringify(result, null, 2));
+            // AppRun Shared doesn't have a dedicated secrets store.
+            // Secrets should be passed as environment variables and must be masked in logs.
+            const showResult = structuredClone(result);
+            showResult.components.forEach((component) => {
+                component.env?.forEach((env) => {
+                    env.value = '***';
+                });
+            });
+            console.log('update application:\n', JSON.stringify(showResult, null, 2));
             const resultPacketFilter = await patchPacketFilter(client, result.id, packetFilter);
             console.log('patch packet filter:\n', JSON.stringify(resultPacketFilter, null, 2));
             publicURL = result.public_url;
