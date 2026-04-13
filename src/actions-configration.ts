@@ -210,7 +210,7 @@ export function getUpdateConfig(applicationName: string, applicationID: string):
   if (typeof action !== 'undefined' && !['new', 'keep'].includes(action)) {
     throw new Error(`Invalid action value`);
   }
-  if (typeof action !== 'undefined' && action === 'keep' && typeof server !== 'undefined' && typeof username !== 'undefined' && typeof password !== 'undefined') {
+  if (typeof action !== 'undefined' && action === 'keep' && (typeof server !== 'undefined' || typeof username !== 'undefined' || typeof password !== 'undefined')) {
     throw new Error(`Invalid Server, Username or Password must not be specified when Action is set to keep`);
   }
 

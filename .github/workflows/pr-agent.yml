@@ -22,6 +22,7 @@ jobs:
           config.model: "openai/Qwen3-Coder-480B-A35B-Instruct-FP8"
           PR_REVIEWER.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
           PR_DESCRIPTION.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions. Titles should have prefix of commitlint pattern such as `feat:`, `chore:`, `test:`, `fix:`, `ci:`, `docs:` etc"
+          PR_DESCRIPTION.EXTRA_IMPROVE: "Please use Japanese in descriptions. Titles should have prefix of commitlint pattern such as `feat:`, `chore:`, `test:`, `fix:`, `ci:`, `docs:` etc"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "true"
           github_action_config.auto_improve: "true"

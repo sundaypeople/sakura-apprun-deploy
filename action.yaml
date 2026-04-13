@@ -23,6 +23,9 @@ inputs:
   container_registry_password:
     description: 'Container registry password'
     required: false
+  container_registry_action:
+    description: 'Container registry action (new or keep)'
+    required: false
   min_scale:
     description: 'Minimum scale for the application'
     required: false
