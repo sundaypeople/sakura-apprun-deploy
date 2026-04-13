@@ -85,7 +85,7 @@ export function getCreateConfig(applicationName: string): [model.CreateApplicati
   const username = getStringInputUndefined('container_registry_username', true);
   const password = getStringInputUndefined('container_registry_password', true);
   if (!((typeof username === 'undefined' && typeof password === 'undefined') || (typeof username === 'string' && typeof password === 'string'))) {
-    throw new Error(`Authentication to Container Registry requires Username, and Password`);
+    throw new Error(`Authentication to Container Registry requires Username and Password`);
   }
   if (typeof server === 'undefined' && typeof username === 'string' && typeof password === 'string') {
     server = image?.split('/')[0];
@@ -198,7 +198,7 @@ export function getUpdateConfig(applicationName: string, applicationID: string):
   const username = getStringInputUndefined('container_registry_username', true);
   const password = getStringInputUndefined('container_registry_password', true);
   if (!((typeof username === 'undefined' && typeof password === 'undefined') || (typeof username === 'string' && typeof password === 'string'))) {
-    throw new Error(`Authentication to Container Registry requires Username, and Password`);
+    throw new Error(`Authentication to Container Registry requires Username and Password`);
   }
   if (typeof server === 'undefined' && typeof username === 'string' && typeof password === 'string') {
     server = image?.split('/')[0];

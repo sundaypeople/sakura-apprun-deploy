@@ -65,7 +65,6 @@ jobs:
           container_registry_password: ${{ secrets.REGISTRY_PASS }}
           container_registry_action: 'new'
 
-
           # ポート / スケール
           port: 8080
           min_scale: 0
@@ -73,7 +72,6 @@ jobs:
 
           # コンポーネント名（省略時は application_name）
           components_name: example
-
          
           # リソース上限
           max_cpu: "0.5"     

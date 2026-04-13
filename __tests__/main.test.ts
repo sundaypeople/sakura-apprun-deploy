@@ -527,7 +527,7 @@ ANOTHER_MAP: |
           image: 'nginx.sakuracr.jp/nginx:latest',
           container_registry_password: 'password',
         },
-        expectedError: 'Authentication to Container Registry requires Username, and Password',
+        expectedError: 'Authentication to Container Registry requires Username and Password',
       },
       {
         name: 'Only the password is missing in container registry authentication info',
@@ -538,7 +538,7 @@ ANOTHER_MAP: |
           image: 'nginx.sakuracr.jp/nginx:latest',
           container_registry_username: 'username',
         },
-        expectedError: 'Authentication to Container Registry requires Username, and Password',
+        expectedError: 'Authentication to Container Registry requires Username and Password',
       },
       {
         name: 'Invalid timeout_seconds (NaN)',
@@ -1232,7 +1232,7 @@ ANOTHER_MAP: |
           image: 'nginx.sakuracr.jp/nginx:latest',
           container_registry_password: 'password',
         },
-        expectedError: 'Authentication to Container Registry requires Username, and Password',
+        expectedError: 'Authentication to Container Registry requires Username and Password',
       },
       {
         name: 'Only the password is missing in container registry authentication info',
@@ -1243,7 +1243,7 @@ ANOTHER_MAP: |
           image: 'nginx.sakuracr.jp/nginx:latest',
           container_registry_username: 'username',
         },
-        expectedError: 'Authentication to Container Registry requires Username, and Password',
+        expectedError: 'Authentication to Container Registry requires Username and Password',
       },
       {
         name: 'Invalid action value',
