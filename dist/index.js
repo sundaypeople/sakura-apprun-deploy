@@ -31701,7 +31701,7 @@ function getCreateConfig(applicationName) {
     const username = getStringInputUndefined('container_registry_username', true);
     const password = getStringInputUndefined('container_registry_password', true);
     if (!((typeof username === 'undefined' && typeof password === 'undefined') || (typeof username === 'string' && typeof password === 'string'))) {
-        throw new Error(`Authentication to Container Registry requires Username, and Password`);
+        throw new Error(`Authentication to Container Registry requires Username and Password`);
     }
     if (typeof server === 'undefined' && typeof username === 'string' && typeof password === 'string') {
         server = image?.split('/')[0];
@@ -31808,7 +31808,7 @@ function getUpdateConfig(applicationName, applicationID) {
     const username = getStringInputUndefined('container_registry_username', true);
     const password = getStringInputUndefined('container_registry_password', true);
     if (!((typeof username === 'undefined' && typeof password === 'undefined') || (typeof username === 'string' && typeof password === 'string'))) {
-        throw new Error(`Authentication to Container Registry requires Username, and Password`);
+        throw new Error(`Authentication to Container Registry requires Username and Password`);
     }
     if (typeof server === 'undefined' && typeof username === 'string' && typeof password === 'string') {
         server = image?.split('/')[0];
@@ -31820,7 +31820,7 @@ function getUpdateConfig(applicationName, applicationID) {
     if (typeof action !== 'undefined' && !['new', 'keep'].includes(action)) {
         throw new Error(`Invalid action value`);
     }
-    if (typeof action !== 'undefined' && action === 'keep' && typeof server !== 'undefined' && typeof username !== 'undefined' && typeof password !== 'undefined') {
+    if (typeof action !== 'undefined' && action === 'keep' && (typeof server !== 'undefined' || typeof username !== 'undefined' || typeof password !== 'undefined')) {
         throw new Error(`Invalid Server, Username or Password must not be specified when Action is set to keep`);
     }
     const componentsName = getStringInput('components_name', applicationName, false, true);
