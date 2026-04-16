@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.0.7](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.6...v0.0.7) - 2026-04-16
+- change license in packagejson by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/39
+- Bump the devdependencies group across 1 directory with 10 updates by @dependabot[bot] in https://github.com/sundaypeople/sakura-apprun-deploy/pull/48
+- feat/add-container-registry-action by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/49
+- update action version to v0.0.7 in readme by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/51
+
 ## [v0.0.6](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.5...v0.0.6) - 2026-01-14
 - Feat/refact by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/35
 - add pr-agent by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/37
