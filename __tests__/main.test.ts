@@ -44,13 +44,17 @@ jest.mock('../src/apprun-client', () => {
                 image: 'aaaa',
                 server: 'aaaa',
                 username: 'aaaa',
-                password: 'aaa',
               },
             },
             env: [
               {
                 key: 'NODE_ENV',
                 value: 'dev',
+              },
+            ],
+            secret: [
+              {
+                key: 'DB_PASSWORD',
               },
             ],
           },
@@ -776,6 +780,12 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
             {
               deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: undefined, username: undefined } },
               env: [],
+              secret: [
+                {
+                  key: 'DB_PASSWORD',
+                  value: '',
+                },
+              ],
               max_cpu: '0.5',
               max_memory: '1Gi',
               name: 'test-application',
@@ -831,6 +841,12 @@ LOG_LEVEL: "info"`,
                 {
                   key: 'LOG_LEVEL',
                   value: 'info',
+                },
+              ],
+              secret: [
+                {
+                  key: 'DB_PASSWORD',
+                  value: '',
                 },
               ],
               max_cpu: '1',
@@ -909,6 +925,12 @@ LOG_LEVEL: "info"`,
                   value: 'info',
                 },
               ],
+              secret: [
+                {
+                  key: 'DB_PASSWORD',
+                  value: '',
+                },
+              ],
               max_cpu: '1',
               max_memory: '1Gi',
               name: 'componentName',
@@ -985,6 +1007,12 @@ LOG_LEVEL: "info"`,
                   value: 'dev',
                 },
               ],
+              secret: [
+                {
+                  key: 'DB_PASSWORD',
+                  value: '',
+                },
+              ],
               max_cpu: '1',
               max_memory: '1Gi',
               name: 'componentName',
@@ -1036,6 +1064,12 @@ LOG_LEVEL: "info"`,
             {
               deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/another/nginx:latest', password: undefined, server: undefined, username: undefined } },
               env: [],
+              secret: [
+                {
+                  key: 'DB_PASSWORD',
+                  value: '',
+                },
+              ],
               max_cpu: '0.5',
               max_memory: '1Gi',
               name: 'test-application',
@@ -1065,6 +1099,12 @@ LOG_LEVEL: "info"`,
             {
               deploy_source: { container_registry: { image: 'nginx.sakuracr.jp', password: undefined, server: undefined, username: undefined } },
               env: [],
+              secret: [
+                {
+                  key: 'DB_PASSWORD',
+                  value: '',
+                },
+              ],
               max_cpu: '0.5',
               max_memory: '1Gi',
               name: 'test-application',
@@ -1096,6 +1136,12 @@ LOG_LEVEL: "info"`,
             {
               deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', server: 'nginx.sakuracr.jp', username: 'username', password: 'password' } },
               env: [],
+              secret: [
+                {
+                  key: 'DB_PASSWORD',
+                  value: '',
+                },
+              ],
               max_cpu: '0.5',
               max_memory: '1Gi',
               name: 'test-application',
@@ -1126,6 +1172,12 @@ LOG_LEVEL: "info"`,
             {
               deploy_source: { container_registry: { image: 'nginx.sakuracr.jp/nginx:latest', password: undefined, server: undefined, username: undefined } },
               env: [],
+              secret: [
+                {
+                  key: 'DB_PASSWORD',
+                  value: '',
+                },
+              ],
               max_cpu: '0.5',
               max_memory: '1Gi',
               name: 'test-application',
@@ -1172,6 +1224,12 @@ ANOTHER_MAP: |
                 {
                   key: 'ANOTHER_MAP',
                   value: 'DEBUG: "ture"\n',
+                },
+              ],
+              secret: [
+                {
+                  key: 'DB_PASSWORD',
+                  value: '',
                 },
               ],
               max_cpu: '1',

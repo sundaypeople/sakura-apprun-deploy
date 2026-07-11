@@ -1,6 +1,6 @@
 import { setOutput, setFailed } from '@actions/core';
 import { apprunClient, getAllApplication, patchPacketFilter, createApplication, getApplication, patchApplication } from './apprun-client';
-import { getAPIKey, getConfig, replaceEnv } from './actions-configration';
+import { getAPIKey, getConfig, replaceEnv, replaceSecret } from './actions-configration';
 import * as model from './model';
 
 export async function run(): Promise<void> {
@@ -31,9 +31,10 @@ export async function run(): Promise<void> {
       publicURL = result.public_url;
     } else {
       let sendAppParam = application;
-      if (inheritEnv) {
-        if (typeof application.id === 'string') {
-          const result = await getApplication(client, application.id);
+      if (typeof application.id === 'string') {
+        const result = await getApplication(client, application.id);
+        sendAppParam = replaceSecret(application, result);
+        if (inheritEnv) {
           sendAppParam = replaceEnv(application, result);
         }
       }

@@ -321,3 +321,18 @@ export function replaceEnv(application: model.PatchApplicationRequest, pastAppli
   }
   return application;
 }
+
+export function replaceSecret(application: model.PatchApplicationRequest, pastApplication: model.GetApplicationResponse): model.PatchApplicationRequest {
+  if (typeof application.components !== 'undefined') {
+    const pastSecrets = pastApplication.components[0].secret;
+    const secrets: model.Secret[] = [];
+    if (typeof pastSecrets !== 'undefined') {
+      pastSecrets.forEach((pastSecret) => {
+        const secret: model.Secret = { key: pastSecret.key, value: '' };
+        secrets.push(secret);
+      });
+    }
+    application.components[0].secret = secrets;
+  }
+  return application;
+}

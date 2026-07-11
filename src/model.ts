@@ -97,12 +97,38 @@ export interface PatchComponentSpec {
     };
   };
   env?: Array<Env>;
+  secret?: Array<Secret>;
   probe?: Probe;
 }
 
 export interface Env {
   key: string;
   value: string;
+}
+
+export interface Secret {
+  key: string;
+  value: string;
+}
+
+export interface GetComponentSpec {
+  name: string;
+  max_cpu: string;
+  max_memory: string;
+  deploy_source: {
+    container_registry: {
+      image: string;
+      server?: string;
+      username?: string;
+    };
+  };
+  env?: Array<Env>;
+  secret?: Array<GetSecret>;
+  probe?: Probe;
+}
+
+export interface GetSecret {
+  key: string;
 }
 
 export interface Probe {
@@ -138,7 +164,7 @@ export interface GetApplicationResponse {
   port: number;
   min_scale: number;
   max_scale: number;
-  components: CreateComponentSpec[];
+  components: GetComponentSpec[];
   status: string;
   public_url: string;
   resource_id: string;
