@@ -471,7 +471,6 @@ ANOTHER_MAP: |
           image: 'nginx.sakuracr.jp/another/nginx:latest',
         },
         expectedError: 'Input required and not supplied: access_token',
-        expectedOutput: undefined,
       },
       {
         name: 'Missing access_secret',
@@ -481,7 +480,6 @@ ANOTHER_MAP: |
           image: 'nginx.sakuracr.jp/another/nginx:latest',
         },
         expectedError: 'Input required and not supplied: access_secret',
-        expectedOutput: undefined,
       },
       {
         name: 'Missing application_name',
@@ -491,7 +489,6 @@ ANOTHER_MAP: |
           image: 'nginx.sakuracr.jp/another/nginx:latest',
         },
         expectedError: 'Input required and not supplied: application_name',
-        expectedOutput: undefined,
       },
       {
         name: 'Missing image',
@@ -501,7 +498,6 @@ ANOTHER_MAP: |
           application_name: 'test',
         },
         expectedError: 'Input required and not supplied: image',
-        expectedOutput: undefined,
       },
       {
         name: 'Only the username is missing in container registry authentication info',
@@ -513,7 +509,6 @@ ANOTHER_MAP: |
           container_registry_password: 'password',
         },
         expectedError: 'Authentication to Container Registry requires Username and Password',
-        expectedOutput: undefined,
       },
       {
         name: 'Only the password is missing in container registry authentication info',
@@ -525,7 +520,6 @@ ANOTHER_MAP: |
           container_registry_username: 'username',
         },
         expectedError: 'Authentication to Container Registry requires Username and Password',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid timeout_seconds (NaN)',
@@ -536,7 +530,6 @@ ANOTHER_MAP: |
           timeout_seconds: 'aaa',
         },
         expectedError: 'timeout_seconds is not a valid number: NaN',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid port (NaN)',
@@ -548,7 +541,6 @@ ANOTHER_MAP: |
           port: 'aaa',
         },
         expectedError: 'port is not a valid number: NaN',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid min_scale (NaN)',
@@ -560,7 +552,6 @@ ANOTHER_MAP: |
           min_scale: 'aaa',
         },
         expectedError: 'min_scale is not a valid number: NaN',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid max_scale (NaN)',
@@ -572,7 +563,6 @@ ANOTHER_MAP: |
           max_scale: 'aaa',
         },
         expectedError: 'max_scale is not a valid number: NaN',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid max_scale (NaN)',
@@ -584,7 +574,6 @@ ANOTHER_MAP: |
           max_scale: 'aaa',
         },
         expectedError: 'max_scale is not a valid number: NaN',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid max_cpu (NaN)',
@@ -597,7 +586,6 @@ ANOTHER_MAP: |
           max_memory: '1Gi',
         },
         expectedError: 'Invalid maxCPU and maxMemory value',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid max_memory (NaN)',
@@ -610,7 +598,6 @@ ANOTHER_MAP: |
           max_memory: 'a',
         },
         expectedError: 'Invalid maxCPU and maxMemory value',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid max_cpu and max_memory (out of plan)',
@@ -623,7 +610,6 @@ ANOTHER_MAP: |
           max_memory: '4Gi',
         },
         expectedError: 'Invalid maxCPU and maxMemory value',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid env',
@@ -638,7 +624,6 @@ ANOTHER_MAP: |
 LOG_LEVEL: "info"`,
         },
         expectedError: `can not read a block mapping entry; a multiline key may not be an implicit key`,
-        expectedOutput: undefined,
       },
       {
         name: 'env bad indentation of a mapping entry',
@@ -655,7 +640,6 @@ ANOTHER_MAP: |
   DEBUG: "ture"`,
         },
         expectedError: `bad indentation of a mapping entry`,
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid inherit_env',
@@ -672,7 +656,6 @@ LOG_LEVEL: "info"`,
         },
         expectedError: `Input does not meet YAML 1.2 "Core Schema" specification: packet_filter_enabled
 Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid probe_port (NaN)',
@@ -686,7 +669,6 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
           probe_port: 'aaa',
         },
         expectedError: 'probe_port is not a valid number: NaN',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid probe_headers',
@@ -701,7 +683,6 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
 LOG_LEVEL: "info"`,
         },
         expectedError: `can not read a block mapping entry; a multiline key may not be an implicit key`,
-        expectedOutput: undefined,
       },
       {
         name: 'probe_headers bad indentation of a mapping entry',
@@ -718,7 +699,6 @@ ANOTHER_MAP: |
   DEBUG: "ture`,
         },
         expectedError: `bad indentation of a mapping entry`,
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid packet_filter_enabled',
@@ -731,7 +711,6 @@ ANOTHER_MAP: |
         },
         expectedError: `Input does not meet YAML 1.2 "Core Schema" specification: packet_filter_enabled
 Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
-        expectedOutput: undefined,
       },
     ];
     test.each(testCase)('$name', async ({ input, expectedOutput, expectedOutputPacketFilter, expectedError }) => {
@@ -1254,7 +1233,6 @@ ANOTHER_MAP: |
           image: 'nginx.sakuracr.jp/another/nginx:latest',
         },
         expectedError: 'Input required and not supplied: access_token',
-        expectedOutput: undefined,
       },
       {
         name: 'Missing access_secret',
@@ -1264,7 +1242,6 @@ ANOTHER_MAP: |
           image: 'nginx.sakuracr.jp/another/nginx:latest',
         },
         expectedError: 'Input required and not supplied: access_secret',
-        expectedOutput: undefined,
       },
       {
         name: 'Missing application_name',
@@ -1274,7 +1251,6 @@ ANOTHER_MAP: |
           image: 'nginx.sakuracr.jp/another/nginx:latest',
         },
         expectedError: 'Input required and not supplied: application_name',
-        expectedOutput: undefined,
       },
       {
         name: 'Missing image',
@@ -1284,7 +1260,6 @@ ANOTHER_MAP: |
           application_name: 'test-application',
         },
         expectedError: 'Input required and not supplied: image',
-        expectedOutput: undefined,
       },
       {
         name: 'Only the username is missing in container registry authentication info',
@@ -1296,7 +1271,6 @@ ANOTHER_MAP: |
           container_registry_password: 'password',
         },
         expectedError: 'Authentication to Container Registry requires Username and Password',
-        expectedOutput: undefined,
       },
       {
         name: 'Only the password is missing in container registry authentication info',
@@ -1308,7 +1282,6 @@ ANOTHER_MAP: |
           container_registry_username: 'username',
         },
         expectedError: 'Authentication to Container Registry requires Username and Password',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid action value',
@@ -1322,7 +1295,6 @@ ANOTHER_MAP: |
           container_registry_action: 'a',
         },
         expectedError: 'Invalid action value',
-        expectedOutput: undefined,
       },
       {
         name: 'do not input username and password action is keep',
@@ -1336,7 +1308,6 @@ ANOTHER_MAP: |
           container_registry_action: 'keep',
         },
         expectedError: 'Invalid Server, Username or Password must not be specified when Action is set to keep',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid timeout_seconds (NaN)',
@@ -1347,7 +1318,6 @@ ANOTHER_MAP: |
           timeout_seconds: 'aaa',
         },
         expectedError: 'timeout_seconds is not a valid number: NaN',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid port (NaN)',
@@ -1359,7 +1329,6 @@ ANOTHER_MAP: |
           port: 'aaa',
         },
         expectedError: 'port is not a valid number: NaN',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid min_scale (NaN)',
@@ -1371,7 +1340,6 @@ ANOTHER_MAP: |
           min_scale: 'aaa',
         },
         expectedError: 'min_scale is not a valid number: NaN',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid max_scale (NaN)',
@@ -1394,7 +1362,6 @@ ANOTHER_MAP: |
           max_scale: 'aaa',
         },
         expectedError: 'max_scale is not a valid number: NaN',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid max_cpu (NaN)',
@@ -1407,7 +1374,6 @@ ANOTHER_MAP: |
           max_memory: '1Gi',
         },
         expectedError: 'Invalid maxCPU and maxMemory value',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid max_memory (NaN)',
@@ -1420,7 +1386,6 @@ ANOTHER_MAP: |
           max_memory: 'a',
         },
         expectedError: 'Invalid maxCPU and maxMemory value',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid max_cpu and max_memory (out of plan)',
@@ -1433,7 +1398,6 @@ ANOTHER_MAP: |
           max_memory: '4Gi',
         },
         expectedError: 'Invalid maxCPU and maxMemory value',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid env',
@@ -1449,7 +1413,6 @@ ANOTHER_MAP: |
 LOG_LEVEL: "info"`,
         },
         expectedError: `can not read a block mapping entry; a multiline key may not be an implicit key`,
-        expectedOutput: undefined,
       },
       {
         name: 'env bad indentation of a mapping entry',
@@ -1467,7 +1430,6 @@ ANOTHER_MAP: |
   DEBUG: "ture"`,
         },
         expectedError: `bad indentation of a mapping entry`,
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid inherit_env',
@@ -1484,7 +1446,6 @@ LOG_LEVEL: "info"`,
         },
         expectedError: `Input does not meet YAML 1.2 "Core Schema" specification: inherit_env
 Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid probe_port (NaN)',
@@ -1499,7 +1460,6 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
           inherit_env: 'false',
         },
         expectedError: 'probe_port is not a valid number: NaN',
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid probe_headers',
@@ -1515,7 +1475,6 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
 LOG_LEVEL: "info"`,
         },
         expectedError: `can not read a block mapping entry; a multiline key may not be an implicit key`,
-        expectedOutput: undefined,
       },
       {
         name: 'probe_headers bad indentation of a mapping entry',
@@ -1533,7 +1492,6 @@ ANOTHER_MAP: |
   DEBUG: "ture`,
         },
         expectedError: `bad indentation of a mapping entry`,
-        expectedOutput: undefined,
       },
       {
         name: 'Invalid packet_filter_enabled',
@@ -1547,7 +1505,6 @@ ANOTHER_MAP: |
         },
         expectedError: `Input does not meet YAML 1.2 "Core Schema" specification: packet_filter_enabled
 Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
-        expectedOutput: undefined,
       },
     ];
     test.each(testCase)('$name', async ({ input, expectedOutput, expectedOutputPacketFilter, expectedError }) => {
