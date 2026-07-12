@@ -10,7 +10,7 @@
     "format": "npx prettier tests/* src/* mocks/* --write",
     "format:write": "npx prettier --write .",
     "format:check": "npx prettier --check .",
-    "test": "jest"
+    "test": "vitest"
   },
   "repository": {
     "type": "git",
@@ -41,10 +41,9 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
     "globals": "^17.4.0",
-    "jest": "^30.3.0",
     "prettier": "^3.8.1",
-    "ts-jest": "^29.4.9",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.0"
+    "typescript-eslint": "^8.58.0",
+    "vitest": "^4.1.10"
   }
 }
