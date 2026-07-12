@@ -31924,6 +31924,20 @@ function replaceEnv(application, pastApplication) {
     }
     return application;
 }
+function replaceSecret(application, pastApplication) {
+    if (typeof application.components !== 'undefined') {
+        const pastSecrets = pastApplication.components[0].secret;
+        const secrets = [];
+        if (typeof pastSecrets !== 'undefined') {
+            pastSecrets.forEach((pastSecret) => {
+                const secret = { key: pastSecret.key, value: '' };
+                secrets.push(secret);
+            });
+        }
+        application.components[0].secret = secrets;
+    }
+    return application;
+}
 
 ;// CONCATENATED MODULE: ./src/main.ts
 
@@ -31957,9 +31971,10 @@ async function run() {
         }
         else {
             let sendAppParam = application;
-            if (inheritEnv) {
-                if (typeof application.id === 'string') {
-                    const result = await getApplication(client, application.id);
+            if (typeof application.id === 'string') {
+                const result = await getApplication(client, application.id);
+                sendAppParam = replaceSecret(application, result);
+                if (inheritEnv) {
                     sendAppParam = replaceEnv(application, result);
                 }
             }

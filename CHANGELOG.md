@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.0.8](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.7...v0.0.8) - 2026-07-12
+
+- update時にシークレットが消えないようにする by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/58
+- jestからvitestへ移行 by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/61
+- Bump the devdependencies group across 1 directory with 9 updates by @dependabot[bot] in https://github.com/sundaypeople/sakura-apprun-deploy/pull/62
+
 ## [v0.0.7](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.6...v0.0.7) - 2026-04-16
 - change license in packagejson by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/39
 - Bump the devdependencies group across 1 directory with 10 updates by @dependabot[bot] in https://github.com/sundaypeople/sakura-apprun-deploy/pull/48
@@ -36,18 +42,3 @@
 
 ## [v0.0.1](https://github.com/sundaypeople/sakura-apprun-deploy/commits/v0.0.1) - 2025-08-17
 - create action by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/1
-
-## [v0.0.5](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.4...v0.0.5) - 2025-08-17
-
-## [v0.0.4](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.3...v0.0.4) - 2025-08-17
-- fix release by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/13
-
-## [v0.0.3](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.2...v0.0.3) - 2025-08-17
-- fix release by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/9
-
-## [v0.0.2](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.1...v0.0.2) - 2025-08-17
-
-## [v0.0.1](https://github.com/sundaypeople/sakura-apprun-deploy/commits/v0.0.1) - 2025-08-17
-- create action by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/3
-- fix release.yml and add ncc by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/6
-- fix bad substitution by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/7
