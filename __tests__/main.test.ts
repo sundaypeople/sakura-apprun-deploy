@@ -101,10 +101,10 @@ vi.mocked(patchApplication).mockImplementation(async (client, application) => {
   };
   return result;
 });
-vi.mocked(getApplication).mockImplementation(async (client, applicationID) => {
+vi.mocked(getApplication).mockImplementation(async (_client, _applicationID) => {
   return existApplication;
 });
-vi.mocked(getAllApplication).mockImplementation(async (client) => {
+vi.mocked(getAllApplication).mockImplementation(async (_client) => {
   const result: model.GetAllApplicationResponse = {
     data: [
       {
@@ -118,7 +118,7 @@ vi.mocked(getAllApplication).mockImplementation(async (client) => {
   };
   return result;
 });
-vi.mocked(patchPacketFilter).mockImplementation(async (client, applicationID, request) => {
+vi.mocked(patchPacketFilter).mockImplementation(async (_client, _applicationID, request) => {
   const result: model.PatchPacketFilterResponse = {
     is_enabled: request.is_enabled,
     settings: request.settings,
