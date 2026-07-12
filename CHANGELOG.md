@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.0.8](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.7...v0.0.8) - 2026-07-12
+
+- update時にシークレットが消えないようにする by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/58
+- jestからvitestへ移行 by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/61
+- Bump the devdependencies group across 1 directory with 9 updates by @dependabot[bot] in https://github.com/sundaypeople/sakura-apprun-deploy/pull/62
+
 ## [v0.0.7](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.6...v0.0.7) - 2026-04-16
 - change license in packagejson by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/39
 - Bump the devdependencies group across 1 directory with 10 updates by @dependabot[bot] in https://github.com/sundaypeople/sakura-apprun-deploy/pull/48
