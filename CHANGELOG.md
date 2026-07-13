@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.9](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.8...v0.0.9) - 2026-07-13
+
+- Update Apprun deploy action version to v0.0.8 by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/63
+
 ## [v0.0.8](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.7...v0.0.8) - 2026-07-12
 
 - update時にシークレットが消えないようにする by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/58
