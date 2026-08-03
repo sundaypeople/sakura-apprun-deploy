@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.10](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.9...v0.0.10) - 2026-08-03
+
+- update version 0.0.9 by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/68
+
 ## [v0.0.9](https://github.com/sundaypeople/sakura-apprun-deploy/compare/v0.0.8...v0.0.9) - 2026-08-03
 
 - Update Apprun deploy action version to v0.0.8 by @sundaypeople in https://github.com/sundaypeople/sakura-apprun-deploy/pull/63
