@@ -3,11 +3,20 @@ description: Registers and deploys the application to Apprun
 
 inputs:
   access_token:
-    description: 'API access token'
-    required: true
+    description: 'API access token (not needed when using a service principal)'
+    required: false
   access_secret:
-    description: 'API access secret'
-    required: true
+    description: 'API access secret (not needed when using a service principal)'
+    required: false
+  service_principal_resource_id:
+    description: 'Resource ID of the service principal. Set together with service_principal_kid and service_principal_private_key.'
+    required: false
+  service_principal_kid:
+    description: 'Key ID (KID) assigned when the service principal public key was registered'
+    required: false
+  service_principal_private_key:
+    description: 'RSA private key of the service principal, as PEM or as base64-encoded PEM'
+    required: false
   application_name:
     description: 'The name of Apprun application'
     required: true

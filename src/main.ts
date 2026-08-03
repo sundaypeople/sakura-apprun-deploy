@@ -1,12 +1,20 @@
-import { setOutput, setFailed } from '@actions/core';
-import { apprunClient, getAllApplication, patchPacketFilter, createApplication, getApplication, patchApplication } from './apprun-client';
-import { getAPIKey, getConfig, replaceEnv, replaceSecret } from './actions-configration';
+import { setOutput, setFailed, setSecret } from '@actions/core';
+import { AppRunClient, apprunBearerClient, apprunClient, getAllApplication, patchPacketFilter, createApplication, getApplication, patchApplication } from './apprun-client';
+import { getConfig, getCredentials, replaceEnv, replaceSecret } from './actions-configration';
+import { fetchAccessToken } from './service-principal';
 import * as model from './model';
 
 export async function run(): Promise<void> {
   try {
-    const keys = getAPIKey();
-    const client = apprunClient(keys.token, keys.secret);
+    const credentials = getCredentials();
+    let client: AppRunClient;
+    if (credentials.kind === 'servicePrincipal') {
+      const accessToken = await fetchAccessToken(credentials.principal);
+      setSecret(accessToken);
+      client = apprunBearerClient(accessToken);
+    } else {
+      client = apprunClient(credentials.access.token, credentials.access.secret);
+    }
 
     const applications = await getAllApplication(client);
     const nameToIdMap = new Map<string, string>();

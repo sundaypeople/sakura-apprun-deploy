@@ -2,12 +2,19 @@ import { Buffer } from 'node:buffer';
 import * as model from './model';
 
 const URL = 'https://secure.sakura.ad.jp/cloud/api/apprun/1.0/apprun/api/';
-interface AppRunClient {
+export interface AppRunClient {
   authHeader: string;
 }
 export const apprunClient = (accessToken: string, accessSecret: string): AppRunClient => {
   return {
     authHeader: 'Basic ' + Buffer.from(`${accessToken}:${accessSecret}`).toString('base64'),
+  };
+};
+
+/** Client authenticated with a service principal bearer token. */
+export const apprunBearerClient = (accessToken: string): AppRunClient => {
+  return {
+    authHeader: `Bearer ${accessToken}`,
   };
 };
 

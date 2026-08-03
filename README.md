@@ -106,12 +106,55 @@ jobs:
 
 ---
 
+## 認証方法
+
+認証方法は 2 つあり、どちらか一方を指定します。
+
+### サービスプリンシパル（推奨）
+
+サービスプリンシパルでは、長期的な秘密である RSA 秘密鍵は利用者側に置いたままで、
+実際に送信するのは有効期限 5 分の署名付きアサーションだけです。
+これをさくらのクラウドのトークンエンドポイントに送り、有効期間 1 時間のアクセストークンと交換します。
+
+事前にコントロールパネルで公開鍵を登録し、リソース ID と KID を控えてください。
+詳細は[サービスプリンシパルのマニュアル](https://manual.sakura.ad.jp/cloud/controlpanel/service-principal.html)を参照してください。
+
+```yaml
+- uses: sundaypeople/sakura-apprun-deploy@v0.0.8
+  with:
+    service_principal_resource_id: ${{ secrets.SAKURACLOUD_SP_RESOURCE_ID }}
+    service_principal_kid: ${{ secrets.SAKURACLOUD_SP_KID }}
+    service_principal_private_key: ${{ secrets.SAKURACLOUD_SP_PRIVATE_KEY }}
+    application_name: my-app
+    image: registry.example.com/namespace/my-app:latest
+```
+
+* `service_principal_private_key` は PEM そのままでも、PEM を base64 で 1 行にエンコードしたものでも受け付けます。
+* サービスプリンシパルの 3 つの入力は必ずまとめて指定してください。一部だけ指定した場合はエラーになります。
+* 取得したアクセストークンは `setSecret` でマスクされ、ログには出力されません。
+
+### API キー
+
+```yaml
+- uses: sundaypeople/sakura-apprun-deploy@v0.0.8
+  with:
+    access_token: ${{ secrets.APPRUN_ACCESS_TOKEN }}
+    access_secret: ${{ secrets.APPRUN_ACCESS_SECRET }}
+    application_name: my-app
+    image: registry.example.com/namespace/my-app:latest
+```
+
+> ℹ️ 両方を指定した場合はサービスプリンシパルが優先され、`access_token` / `access_secret` は無視されます。
+
 ## Inputs（入力）
 
 | 名前                         | 必須 | 説明                                                                           |
 |----------------------------|:--:|------------------------------------------------------------------------------|
-| `access_token`             | ✔︎ | Apprun の API アクセストークン                                                        |
-| `access_secret`            | ✔︎ | Apprun の API アクセスシークレット                                                      |
+| `access_token`             | ※ | Apprun の API アクセストークン（サービスプリンシパル利用時は不要）                                      |
+| `access_secret`            | ※ | Apprun の API アクセスシークレット（サービスプリンシパル利用時は不要）                                    |
+| `service_principal_resource_id` | ※ | サービスプリンシパルのリソース ID（3 つまとめて指定）                                            |
+| `service_principal_kid`    | ※ | 公開鍵登録時に払い出された鍵 ID（KID）                                                       |
+| `service_principal_private_key` | ※ | サービスプリンシパルの RSA 秘密鍵（PEM、または PEM を base64 エンコードしたもの）                     |
 | `application_name`         | ✔︎ | アプリケーション名（作成/更新のキー）                                                          |
 | `port`                     |    | アプリがリッスンするポート番号                                                              |
 | `image`                    | ✔︎ | デプロイするコンテナイメージ（例: `registry.example.com/ns/app:tag`）                         |
@@ -132,6 +175,10 @@ jobs:
 | `inherit_env`              | 　　| 更新時にサービス環境変数を一つ前のから継承（true / false） |
 | `packet_filter_enabled`    |    | パケットフィルターの有効化（true / false）                                                  |
 | `packet_filter_allowlist`  |    | 許可する送信元 CIDR のリスト（改行区切り）                                                     |
+
+> ℹ️ **※ の入力について**
+> 認証に使うため、`access_token` + `access_secret` の組か、`service_principal_*` の 3 つの組の
+> **どちらか一方**が必須です。詳しくは [認証方法](#認証方法) を参照してください。
 
 > ℹ️ **YAML マップ入力について**
 > `env` と `probe_headers` は YAML を **キー/値のマップ**で記述します。
