@@ -1,7 +1,7 @@
 import { run } from '../src/main';
 import { setFailed } from '@actions/core';
 import { patchPacketFilter, createApplication, getApplication, patchApplication, getAllApplication } from '../src/apprun-client';
-import { vi, describe, afterEach, test, expect } from 'vitest';
+import { vi, describe, beforeEach, afterEach, test, expect } from 'vitest';
 
 import * as model from '../src/model';
 vi.mock('@actions/core', { spy: true });
@@ -127,6 +127,9 @@ vi.mocked(patchPacketFilter).mockImplementation(async (_client, _applicationID, 
 });
 
 describe('main.ts', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
   afterEach(() => {
     vi.unstubAllEnvs();
   });
@@ -623,7 +626,11 @@ ANOTHER_MAP: |
           env: `NODE_ENV: "production
 LOG_LEVEL: "info"`,
         },
-        expectedError: `can not read a block mapping entry; a multiline key may not be an implicit key`,
+        expectedError: `deficient indentation (2:1)
+
+ 1 | NODE_ENV: "production
+ 2 | LOG_LEVEL: "info"
+-----^`,
       },
       {
         name: 'env bad indentation of a mapping entry',
@@ -682,7 +689,11 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
           probe_headers: `NODE_ENV: "production
 LOG_LEVEL: "info"`,
         },
-        expectedError: `can not read a block mapping entry; a multiline key may not be an implicit key`,
+        expectedError: `deficient indentation (2:1)
+
+ 1 | NODE_ENV: "production
+ 2 | LOG_LEVEL: "info"
+-----^`,
       },
       {
         name: 'probe_headers bad indentation of a mapping entry',
@@ -740,6 +751,9 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
   });
 
   describe('UpdateApplication', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
     afterEach(() => {
       vi.unstubAllEnvs();
     });
@@ -1412,7 +1426,11 @@ ANOTHER_MAP: |
           env: `NODE_ENV: "production
 LOG_LEVEL: "info"`,
         },
-        expectedError: `can not read a block mapping entry; a multiline key may not be an implicit key`,
+        expectedError: `deficient indentation (2:1)
+
+ 1 | NODE_ENV: "production
+ 2 | LOG_LEVEL: "info"
+-----^`,
       },
       {
         name: 'env bad indentation of a mapping entry',
@@ -1474,7 +1492,11 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``,
           probe_headers: `NODE_ENV: "production
 LOG_LEVEL: "info"`,
         },
-        expectedError: `can not read a block mapping entry; a multiline key may not be an implicit key`,
+        expectedError: `deficient indentation (2:1)
+
+ 1 | NODE_ENV: "production
+ 2 | LOG_LEVEL: "info"
+-----^`,
       },
       {
         name: 'probe_headers bad indentation of a mapping entry',
