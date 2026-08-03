@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer';
 import { getBooleanInput, getInput } from '@actions/core';
 import * as model from './model';
 import * as yaml from 'js-yaml';
@@ -73,6 +74,58 @@ export function getAPIKey(): model.Access {
     throw new Error('Both access-token and access-secret are required');
   }
   return { token: accessToken, secret: accessSecret };
+}
+
+/**
+ * Read credentials, preferring a service principal when one is configured.
+ *
+ * A service principal keeps the long-lived secret (the RSA private key) on the
+ * caller side and only ever sends a 5-minute assertion, so it is the preferred
+ * way to authenticate from CI. The API key inputs remain supported.
+ */
+export function getCredentials(): model.Credentials {
+  const resourceId = getStringInputUndefined('service_principal_resource_id', true);
+  const kid = getStringInputUndefined('service_principal_kid', true);
+  const privateKeyInput = getStringInputUndefined('service_principal_private_key', false);
+
+  if (typeof resourceId === 'string' && typeof kid === 'string' && typeof privateKeyInput === 'string') {
+    return {
+      kind: 'servicePrincipal',
+      principal: {
+        resourceId: resourceId,
+        kid: kid,
+        privateKey: normalizePrivateKey(privateKeyInput),
+      },
+    };
+  }
+  if (typeof resourceId !== 'undefined' || typeof kid !== 'undefined' || typeof privateKeyInput !== 'undefined') {
+    throw new Error('service_principal_resource_id, service_principal_kid and service_principal_private_key must be set together');
+  }
+
+  // Neither authentication method was configured at all. Point at both of them
+  // rather than letting getAPIKey report only the missing access_token.
+  if (typeof getStringInputUndefined('access_token', true) === 'undefined' && typeof getStringInputUndefined('access_secret', true) === 'undefined') {
+    throw new Error('No credentials were supplied: set either access_token and access_secret, or service_principal_resource_id, service_principal_kid and service_principal_private_key');
+  }
+
+  return { kind: 'apiKey', access: getAPIKey() };
+}
+
+/**
+ * Accept the private key either as a PEM or as a single-line base64 encoding of
+ * one. Multi-line secrets survive GitHub Actions fine, but base64 is easier to
+ * paste around without breaking the newlines.
+ */
+export function normalizePrivateKey(input: string): string {
+  const trimmed = input.trim();
+  if (trimmed.includes('-----BEGIN')) {
+    return trimmed;
+  }
+  const decoded = Buffer.from(trimmed, 'base64').toString('utf8');
+  if (!decoded.includes('-----BEGIN')) {
+    throw new Error('service_principal_private_key must be a PEM private key, or that PEM encoded as base64');
+  }
+  return decoded.trim();
 }
 
 export function getCreateConfig(applicationName: string): [model.CreateApplicationRequest, model.PatchPacketFilterRequest, boolean] {

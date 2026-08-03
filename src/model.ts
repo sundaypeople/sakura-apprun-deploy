@@ -147,6 +147,15 @@ export interface Access {
   secret: string;
 }
 
+export interface ServicePrincipalAccess {
+  resourceId: string;
+  kid: string;
+  privateKey: string;
+}
+
+/** Either an API key or a service principal. */
+export type Credentials = { kind: 'apiKey'; access: Access } | { kind: 'servicePrincipal'; principal: ServicePrincipalAccess };
+
 export interface GetAllApplicationResponse {
   data: Array<{
     id: string;
