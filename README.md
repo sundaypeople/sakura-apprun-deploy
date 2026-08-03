@@ -22,7 +22,7 @@ jobs:
 
       - name: Deploy
         id: apprun
-        uses: sundaypeople/sakura-apprun-deploy@v0.0.8
+        uses: sundaypeople/sakura-apprun-deploy@v0.0.9
         with:
           access_token: ${{ secrets.APPRUN_ACCESS_TOKEN }}
           access_secret: ${{ secrets.APPRUN_ACCESS_SECRET }}
@@ -49,7 +49,7 @@ jobs:
 
       - name: Deploy to Apprun
         id: deploy
-        uses: sundaypeople/sakura-apprun-deploy@v0.0.8
+        uses: sundaypeople/sakura-apprun-deploy@v0.0.9
         with:
           # 認証（必須）
           access_token:  ${{ secrets.APPRUN_ACCESS_TOKEN }}
@@ -120,7 +120,7 @@ jobs:
 詳細は[サービスプリンシパルのマニュアル](https://manual.sakura.ad.jp/cloud/controlpanel/service-principal.html)を参照してください。
 
 ```yaml
-- uses: sundaypeople/sakura-apprun-deploy@v0.0.8
+- uses: sundaypeople/sakura-apprun-deploy@v0.0.9
   with:
     service_principal_resource_id: ${{ secrets.SAKURACLOUD_SP_RESOURCE_ID }}
     service_principal_kid: ${{ secrets.SAKURACLOUD_SP_KID }}
@@ -136,7 +136,7 @@ jobs:
 ### API キー
 
 ```yaml
-- uses: sundaypeople/sakura-apprun-deploy@v0.0.8
+- uses: sundaypeople/sakura-apprun-deploy@v0.0.9
   with:
     access_token: ${{ secrets.APPRUN_ACCESS_TOKEN }}
     access_secret: ${{ secrets.APPRUN_ACCESS_SECRET }}
