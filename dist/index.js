@@ -27689,6 +27689,12 @@ const apprunClient = (accessToken, accessSecret) => {
         authHeader: 'Basic ' + external_node_buffer_namespaceObject.Buffer.from(`${accessToken}:${accessSecret}`).toString('base64'),
     };
 };
+/** Client authenticated with a service principal bearer token. */
+const apprunBearerClient = (accessToken) => {
+    return {
+        authHeader: `Bearer ${accessToken}`,
+    };
+};
 async function createApplication(client, application) {
     const request = new Request(`${src_URL}applications`, {
         method: 'POST',
@@ -31625,6 +31631,7 @@ var jsYaml = {
 ;// CONCATENATED MODULE: ./src/actions-configration.ts
 
 
+
 function getConfig(nameToIdMap) {
     const applicationName = (0,core.getInput)('application_name', {
         trimWhitespace: true,
@@ -31690,6 +31697,53 @@ function getAPIKey() {
         throw new Error('Both access-token and access-secret are required');
     }
     return { token: accessToken, secret: accessSecret };
+}
+/**
+ * Read credentials, preferring a service principal when one is configured.
+ *
+ * A service principal keeps the long-lived secret (the RSA private key) on the
+ * caller side and only ever sends a 5-minute assertion, so it is the preferred
+ * way to authenticate from CI. The API key inputs remain supported.
+ */
+function getCredentials() {
+    const resourceId = getStringInputUndefined('service_principal_resource_id', true);
+    const kid = getStringInputUndefined('service_principal_kid', true);
+    const privateKeyInput = getStringInputUndefined('service_principal_private_key', false);
+    if (typeof resourceId === 'string' && typeof kid === 'string' && typeof privateKeyInput === 'string') {
+        return {
+            kind: 'servicePrincipal',
+            principal: {
+                resourceId: resourceId,
+                kid: kid,
+                privateKey: normalizePrivateKey(privateKeyInput),
+            },
+        };
+    }
+    if (typeof resourceId !== 'undefined' || typeof kid !== 'undefined' || typeof privateKeyInput !== 'undefined') {
+        throw new Error('service_principal_resource_id, service_principal_kid and service_principal_private_key must be set together');
+    }
+    // Neither authentication method was configured at all. Point at both of them
+    // rather than letting getAPIKey report only the missing access_token.
+    if (typeof getStringInputUndefined('access_token', true) === 'undefined' && typeof getStringInputUndefined('access_secret', true) === 'undefined') {
+        throw new Error('No credentials were supplied: set either access_token and access_secret, or service_principal_resource_id, service_principal_kid and service_principal_private_key');
+    }
+    return { kind: 'apiKey', access: getAPIKey() };
+}
+/**
+ * Accept the private key either as a PEM or as a single-line base64 encoding of
+ * one. Multi-line secrets survive GitHub Actions fine, but base64 is easier to
+ * paste around without breaking the newlines.
+ */
+function normalizePrivateKey(input) {
+    const trimmed = input.trim();
+    if (trimmed.includes('-----BEGIN')) {
+        return trimmed;
+    }
+    const decoded = external_node_buffer_namespaceObject.Buffer.from(trimmed, 'base64').toString('utf8');
+    if (!decoded.includes('-----BEGIN')) {
+        throw new Error('service_principal_private_key must be a PEM private key, or that PEM encoded as base64');
+    }
+    return decoded.trim();
 }
 function getCreateConfig(applicationName) {
     const timeoutSeconds = getNumberInput('timeout_seconds', 30, false);
@@ -31939,14 +31993,97 @@ function replaceSecret(application, pastApplication) {
     return application;
 }
 
+// EXTERNAL MODULE: external "node:crypto"
+var external_node_crypto_ = __nccwpck_require__(7598);
+;// CONCATENATED MODULE: ./src/service-principal.ts
+/**
+ * Service principal authentication for SAKURA Cloud.
+ *
+ * Instead of an API key (access token / secret), a service principal signs a
+ * short-lived JWT with its RSA private key and exchanges it for a bearer token.
+ *
+ *   1. Build a JWT: header { alg: RS256, kid: <KID>, typ: JWT },
+ *      payload { iss, sub: <resource id>, aud: <token endpoint>, iat, exp }.
+ *   2. POST it to the token endpoint as an RFC 7523 jwt-bearer assertion.
+ *   3. Use the returned access token as `Authorization: Bearer <token>`.
+ *
+ * See https://manual.sakura.ad.jp/cloud/controlpanel/service-principal.html
+ */
+
+
+const TOKEN_ENDPOINT = 'https://secure.sakura.ad.jp/cloud/api/iam/1.0/service-principals/oauth2/token';
+/** The private key must not outlive the request by much; the doc allows 5 minutes. */
+const ASSERTION_LIFETIME_SECONDS = 300;
+function base64url(input) {
+    return external_node_buffer_namespaceObject.Buffer.from(input).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+/**
+ * Build the signed assertion. Exported so it can be tested without network access.
+ *
+ * @param principal service principal credentials
+ * @param now       current time in seconds since the epoch (injectable for tests)
+ */
+function createAssertion(principal, now = Math.floor(Date.now() / 1000)) {
+    const header = { alg: 'RS256', kid: principal.kid, typ: 'JWT' };
+    const payload = {
+        aud: TOKEN_ENDPOINT,
+        exp: now + ASSERTION_LIFETIME_SECONDS,
+        iat: now,
+        iss: principal.resourceId,
+        sub: principal.resourceId,
+    };
+    const signingInput = `${base64url(JSON.stringify(header))}.${base64url(JSON.stringify(payload))}`;
+    const signer = (0,external_node_crypto_.createSign)('RSA-SHA256');
+    signer.update(signingInput);
+    signer.end();
+    let signature;
+    try {
+        signature = signer.sign(principal.privateKey);
+    }
+    catch (error) {
+        throw new Error(`Failed to sign the assertion with the service principal private key: ${error.message}`, { cause: error });
+    }
+    return `${signingInput}.${base64url(signature)}`;
+}
+/** Exchange a signed assertion for a bearer access token. */
+async function fetchAccessToken(principal) {
+    const body = new URLSearchParams({
+        grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+        assertion: createAssertion(principal),
+    });
+    const response = await fetch(TOKEN_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+    });
+    if (response.status >= 400) {
+        const errorText = await response.text();
+        throw new Error(`Failed to obtain a service principal access token — status ${response.status} ${response.statusText} — URL: ${TOKEN_ENDPOINT} — Response: ${errorText}`);
+    }
+    const token = (await response.json());
+    if (!token.access_token) {
+        throw new Error(`The token endpoint did not return an access token — URL: ${TOKEN_ENDPOINT}`);
+    }
+    return token.access_token;
+}
+
 ;// CONCATENATED MODULE: ./src/main.ts
+
 
 
 
 async function run() {
     try {
-        const keys = getAPIKey();
-        const client = apprunClient(keys.token, keys.secret);
+        const credentials = getCredentials();
+        let client;
+        if (credentials.kind === 'servicePrincipal') {
+            const accessToken = await fetchAccessToken(credentials.principal);
+            (0,core.setSecret)(accessToken);
+            client = apprunBearerClient(accessToken);
+        }
+        else {
+            client = apprunClient(credentials.access.token, credentials.access.secret);
+        }
         const applications = await getAllApplication(client);
         const nameToIdMap = new Map();
         for (const data of applications.data) {
